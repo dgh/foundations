@@ -1,11 +1,13 @@
 from char import Char
 
-class Alphabet():
-	def __init__(self, set={}):
-		self.set = set
+class Alphabet(list):
+	def __init__(self, data=[]):
+		super(Alphabet, self).__init__(data)
+		# self.insert(0, Char())
+		# Adds empty character (ε) to alphabet
 
 	def is_empty(self):
-		return not len(self.set)
+		return not len(self)
 
 	def __repr__(self):
-		return self.set.__repr__()
+		return 'Alphabet<{}>'.format(', '.join(map(str, self)))
