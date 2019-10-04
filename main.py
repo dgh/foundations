@@ -23,3 +23,8 @@ empty_string_dfa = DFA('empty_string_dfa', binary,
 					   (lambda qi: qi == 0 or qi == 1), 0,
 					   (lambda qi, c: 1 if c else 0),
 					   (lambda qi: qi == 0))
+
+only_one_char_dfa = DFA('only_one_char_dfa', binary,
+						(lambda qi: qi == 0 or qi == 1 or qi == 2), 0,
+						(lambda qi, c: 1 if qi == 0 and c else 2),
+						(lambda qi: qi == 1))
