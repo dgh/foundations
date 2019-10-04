@@ -18,3 +18,8 @@ no_strings_dfa = DFA('no_strings_dfa', binary,
 					 (lambda qi: False), 0,
 					 (lambda qi, c: False),
 					 (lambda qi: False))
+
+empty_string_dfa = DFA('empty_string_dfa', binary,
+					   (lambda qi: qi == 0 or qi == 1), 0,
+					   (lambda qi, c: 1 if c else 0),
+					   (lambda qi: qi == 0))
