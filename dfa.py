@@ -11,8 +11,18 @@ class DFA():
 
 	def accepts(self, s):
 		qi = self.q0
-		i = 0
 		for i in range(len(s)):
 			qi = self.δ(qi, s[i])
 
 		return self.F(qi)
+
+	def trace(self, s):
+		states = []
+		if self.accepts(s):
+			qi = self.q0
+			for i in range(len(s)):
+				states.append(qi)
+				qi = self.δ(qi, s[i])
+			return states
+
+		return False
