@@ -9,7 +9,7 @@ class String(list):
 		self.a = a
 		
 	def is_empty(self):
-		return not len(self.s)
+		return not len(self)
 
 	def __repr__(self):
 		return 'String<{}>'.format(''.join(map(str, self)))

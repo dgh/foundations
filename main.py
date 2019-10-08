@@ -27,12 +27,20 @@ def run_dfa_tests(d, tests):
 	return passed
 
 binary = Alphabet([Char('0'), Char('1')])
-alpha = Alphabet([Char(c) for c in 'abcdefghijklmnopqrstuvwxyz#"'])
+# alpha = Alphabet([Char(c) for c in 'abcdefghijklmnopqrstuvwxyz#"'])
 
 even_length_dfa = DFA('even_length_dfa', binary,
-					  (lambda qi: qi == 0 or qi == 1), 0,
-					  (lambda qi, c: 1 if qi == 0 and c else 0),
-					  (lambda qi: qi == 0))
+					  {'q0', 'q1'}, 'q0',
+					  {
+					  	# 'q0': {Char('0'): 'q1', Char('1'): 'q1'},
+					  	# 'q1': {Char('0'): 'q0', Char('1'): 'q0'}
+					  	'q0': {'_default': 'q1'},
+					  	'q1': {'_default': 'q0'}
+					  },
+					  {'q0'})
 
-print('Trace of even_length_dfa with string \'0000\':')
+tests = [([], False), ([Char()], True), ('0', False), ('1', False), ('00', True), ('01', True), ('10', True), ('11', True), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', True)]
+run_dfa_tests(even_length_dfa, tests)
+
+print('Trace of even_length_dfa with string \'0110\':')
 print(even_length_dfa.trace('0000'))

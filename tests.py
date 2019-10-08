@@ -21,83 +21,142 @@ binary = Alphabet([Char('0'), Char('1')])
 alpha = Alphabet([Char(c) for c in 'abcdefghijklmnopqrstuvwxyz#"'])
 
 no_strings_dfa = DFA('no_strings_dfa', binary,
-					 (lambda qi: False), 0,
-					 (lambda qi, c: False),
-					 (lambda qi: False))
+					 {}, None,
+					 {},
+					 {})
 
 empty_string_dfa = DFA('empty_string_dfa', binary,
-					   (lambda qi: qi == 0 or qi == 1), 0,
-					   (lambda qi, c: 1 if c else 0),
-					   (lambda qi: qi == 0))
-
-only_one_char_dfa = DFA('only_one_char_dfa', binary,
-						(lambda qi: qi == 0 or qi == 1 or qi == 2), 0,
-						(lambda qi, c: 1 if qi == 0 and c else 2),
-						(lambda qi: qi == 1))
+					   {'q0', 'q1'}, 'q0',
+					   {
+					   	'q0': {'_default': 'q1'},
+					   	'q1': {'_default': 'q1'}
+					   },
+					   {'q0'})
 
 even_length_dfa = DFA('even_length_dfa', binary,
-					  (lambda qi: qi == 0 or qi == 1), 0,
-					  (lambda qi, c: 1 if qi == 0 and c else 0),
-					  (lambda qi: qi == 0))
+					  {'q0', 'q1'}, 'q0',
+					  {
+					  	# 'q0': {Char('0'): 'q1', Char('1'): 'q1'},
+					  	# 'q1': {Char('0'): 'q0', Char('1'): 'q0'}
+					  	# These two are equal
+					  	'q0': {'_default': 'q1'},
+					  	'q1': {'_default': 'q0'}
+					  },
+					  {'q0'})
 
 odd_length_dfa = DFA('odd_length_dfa', binary,
-					  (lambda qi: qi == 0 or qi == 1), 0,
-					  (lambda qi, c: 1 if qi == 0 and c else 0),
-					  (lambda qi: qi == 1))
+					  {'q0', 'q1'}, 'q0',
+					  {
+					  	'q0': {'_default': 'q1'},
+					  	'q1': {'_default': 'q0'}
+					  },
+					  {'q1'})
 
 even_binary_dfa = DFA('even_binary_dfa', binary,
-					  (lambda qi: qi == 0 or qi == 1), 0,
-					  (lambda qi, c: 1 if c == '0' else 0),
-					  (lambda qi: qi == 1))
+					  {'q0', 'q1'}, 'q0',
+					  {
+					  	'q0': {Char('0'): 'q0', Char('1'): 'q1'},
+					  	'q1': {Char('0'): 'q0', Char('1'): 'q1'}
+					  },
+					  {'q0'})
 
 odd_binary_dfa = DFA('odd_binary_dfa', binary,
-					 (lambda qi: qi == 0 or qi == 1), 0,
-					 (lambda qi, c: 0 if c == '0' else 1),
-					 (lambda qi: qi == 1))
+					 {'q0', 'q1'}, 'q0',
+					 {
+					 	'q0': {Char('0'): 'q0', Char('1'): 'q1'},
+					 	'q1': {Char('0'): 'q0', Char('1'): 'q1'}
+					 },
+					 {'q1'})
 
 dave_dfa = DFA('dave_dfa', alpha,
-			   (lambda qi: qi == 0 or qi == 1 or qi == 2 or qi == 3 or qi == 4 or qi == 5), 0,
-			   (lambda qi, c: 1 if qi == 0 and c == 'd' else 2 if qi == 1 and c == 'a' else 3 if qi == 2 and c == 'v' else 4 if qi == 3 and c == 'e' else 5),
-			   (lambda qi: qi == 4))
+			   {'q0', 'q1', 'q2', 'q3', 'q4', 'q5'}, 'q0',
+			   {
+			   	'q0': {Char('d'): 'q1', '_default': 'q5'},
+			    'q1': {Char('a'): 'q2', '_default': 'q5'},
+			    'q2': {Char('v'): 'q3', '_default': 'q5'},
+			    'q3': {Char('e'): 'q4', '_default': 'q5'},
+			    'q4': {'_default': 'q5'},
+			    'q5': {'_default': 'q5'}
+			   },
+			   {'q4'})
 
 python_comment_dfa = DFA('python_comment_dfa', alpha,
- 						 (lambda qi: qi == 0 or qi == 1 or qi == 2), 0,
-						 (lambda qi, c: 1 if qi == 0 and c == '#' else 1 if qi == 1 else 2),
-						 (lambda qi: qi == 1))
-
-consecutive_zeros_dfa = DFA('consecutive_zeros_dfa', binary,
-							(lambda qi: qi == 0 or qi == 1 or qi == 2), 0,
-							(lambda qi, c: 1 if qi == 0 and c == '0' else 2 if qi == 1 and c == '0' else 2 if qi == 2 else 0),
-							(lambda qi: qi == 2))
-
-consecutive_ones_dfa = DFA('consecutive_ones_dfa', binary,
-						   (lambda qi: qi == 0 or qi == 1 or qi == 2), 0,
-						   (lambda qi, c: 1 if qi == 0 and c == '1' else 2 if qi == 1 and c == '1' else 2 if qi == 2 else 0),
-						   (lambda qi: qi == 2))
+ 						 {'q0', 'q1', 'q2'}, 'q0',
+ 						 {
+ 						 	'q0': {Char('#'): 'q1', '_default': 'q2'},
+ 						 	'q1': {'_default': 'q1'},
+ 						 	'q2': {'_default': 'q2'},
+ 						 },
+ 						 {'q1'})
 
 valid_string_dfa = DFA('valid_string_dfa', alpha,
-					   (lambda qi: qi == 0 or qi == 1 or qi == 2 or qi == 3 or qi == 4), 0,
-					   (lambda qi, c: 1 if qi == 0 and c == '"' else 2 if qi == 1 and c != '"' else 3 if qi == 2 and c == '"' else 3 if qi == 1 and c == '"' else 2 if qi == 2 else 4),
-					   (lambda qi: qi == 3))
+					   {'q0', 'q1', 'q2', 'q3', 'q4'}, 'q0',
+					   {
+					   	'q0': {Char('"'): 'q1', '_default': 'q4'},
+					   	'q1': {Char('"'): 'q3', '_default': 'q2'},
+					   	'q2': {Char('"'): 'q3', '_default': 'q2'},
+					   	'q3': {'_default': 'q4'},
+					   	'q4': {'_default': 'q4'},
+					   },
+					   {'q3'})
+
+consecutive_zeros_dfa = DFA('consecutive_zeros_dfa', binary,
+							{'q0', 'q1', 'q2'}, 'q0',
+							{
+								'q0': {Char('0'): 'q1', '_default': 'q0'},
+								'q1': {Char('0'): 'q2', '_default': 'q0'},
+								'q2': {'_default': 'q2'}
+							},
+							{'q2'})
+
+consecutive_ones_dfa = DFA('consecutive_ones_dfa', binary,
+						   {'q0', 'q1', 'q2'}, 'q0',
+						   {
+						   	'q0': {Char('1'): 'q1', '_default': 'q0'},
+						    'q1': {Char('1'): 'q2', '_default': 'q0'},
+						    'q2': {'_default': 'q2'}
+						   },
+						   {'q2'})
 
 contains_001_dfa = DFA('contains_001_dfa', binary,
-					   (lambda qi: qi == 0 or qi == 1 or qi == 2 or qi == 3), 0,
-					   (lambda qi, c: 0 if qi == 0 and c == '1' else 1 if qi == 0 and c == '0' else 0 if qi == 1 and c == '1' else 2 if qi == 1 and c == '0' else 2 if qi == 2 and c == '0' else 3),
-					   (lambda qi: qi == 3))
+					   {'q0', 'q1', 'q2', 'q3'}, 'q0',
+					   {
+						   	'q0': {Char('0'): 'q1', '_default': 'q0'},
+						    'q1': {Char('0'): 'q2', '_default': 'q0'},
+						    'q2': {Char('1'): 'q3', '_default': 'q2'},
+						    'q3': {'_default': 'q3'}
+					   },
+					   {'q3'})
 
 only_ones_dfa = DFA('only_ones_dfa', binary,
-					(lambda qi: qi == 0 or qi == 1 or qi == 2), 0,
-					(lambda qi, c: 1 if qi != 2 and c == '1' else 2),
-					(lambda qi: qi == 1))
+					{'q0', 'q1', 'q2'}, 'q0',
+					{
+						'q0': {Char('1'): 'q1', '_default': 'q2'},
+						'q1': {Char('1'): 'q1', '_default': 'q2'},
+						'q2': {'_default': 'q2'},
+					},
+					{'q1'})
 
 only_zeros_dfa = DFA('only_zeros_dfa', binary,
-					 (lambda qi: qi == 0 or qi == 1 or qi == 2), 0,
-					 (lambda qi, c: 1 if qi != 2 and c == '0' else 2),
-					 (lambda qi: qi == 1))
+					 {'q0', 'q1', 'q2'}, 'q0',
+					 {
+					 	'q0': {Char('0'): 'q1', '_default': 'q2'},
+					 	'q1': {Char('0'): 'q1', '_default': 'q2'},
+					 	'q2': {'_default': 'q2'},
+					 },
+					 {'q1'})
+
+# Test DFA that does not accept anything
+tests = [([], True), ([Char()], False), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False)]
+run_dfa_tests(no_strings_dfa, tests)
 
 # Test DFA that accepts even length strings
-tests = [([], True), ('0', False), ('1', False), ('00', True), ('01', True), ('10', True), ('11', True), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', True)]
+tests = [([Char()], True), ('0', False), ('1', False), ('00', True), ('01', True), ('10', True), ('11', True), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', True)]
 run_dfa_tests(even_length_dfa, tests)
+
+# Test DFA that accepts the empty string
+tests = [([], False), ([Char()], True), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False)]
+run_dfa_tests(empty_string_dfa, tests)
 
 # Test DFA that accepts odd length strings
 tests = [([], False), ('0', True), ('1', True), ('00', False), ('01', False), ('10', False), ('11', False), ('000', True), ('001', True), ('010', True), ('011', True), ('0000', False)]
@@ -139,5 +198,6 @@ run_dfa_tests(contains_001_dfa, tests)
 tests = [([], False), ('0', False), ('01', False), ('00', False), ('000', False), ('001', False), ('1', True), ('11', True), ('111', True), ('1111', True), ('11111', True), ('111111', True)]
 run_dfa_tests(only_ones_dfa, tests)
 
+# Test DFA that accepts strings of only zeros
 tests = [([], False), ('1', False), ('10', False), ('11', False), ('111', False), ('110', False), ('0', True), ('00', True), ('000', True), ('0000', True), ('00000', True), ('000000', True)]
 run_dfa_tests(only_zeros_dfa, tests)
