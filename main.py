@@ -50,6 +50,9 @@ def dfa_cross(d1, d2, cond, name):
 def dfa_union(d1, d2, name):
 	return dfa_cross(d1, d2, bool.__or__, name)
 
+def dfa_intersect(d1, d2, name):
+	return dfa_cross(d1, d2, bool.__and__, name)
+
 binary = Alphabet([Char('0'), Char('1')])
 # alpha = Alphabet([Char(c) for c in 'abcdefghijklmnopqrstuvwxyz#"'])
 
