@@ -26,11 +26,9 @@ class DFA():
 			return False
 
 		qi = self.q0
-		for i in range(len(s)):
-			if self.δ[qi].get('_default'):
-				qi =  self.δ[qi].get(s[i], self.δ[qi]['_default'])
-			else:
-				qi =  self.δ[qi][s[i]]
+		for c in s:
+			qi = self.δ[qi][c]
+
 		return qi in self.F
 
 	def get_accepted(self):
@@ -64,9 +62,9 @@ class DFA():
 		states = []
 		if self.accepts(s):
 			qi = self.q0
-			for i in range(len(s)):
+			for c in s:
 				states.append(qi)
-				qi =  self.δ[qi].get(s[i], self.δ[qi]['_default'])
+				qi =  self.δ[qi][c]
 			return states
 
 		return False
