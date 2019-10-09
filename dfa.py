@@ -4,13 +4,17 @@ from string import String
 class DFA():
 	def __init__(self, name, Σ, Q, q0, δ, F):
 		self.name = name
-		self.Q = Q
 		self.Σ = Σ
+		self.Q = Q
 		self.q0 = q0
 		self.δ = δ
 		self.F = F
 
 	def accepts(self, s):
+		'''
+			Transitioning with '_default' is useful for a 'shadow realm' state
+			where you go to if an input is incorrect and the DFA won't accept it.
+		'''
 		if self.Q: 
 			if not s:
 				return False
