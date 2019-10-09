@@ -49,10 +49,10 @@ print(f'Trace of {even_length_dfa.name} with input \'0110\': {even_length_dfa.tr
 contains_001_dfa = DFA('contains_001_dfa', binary,
 					   {'q0', 'q1', 'q2', 'q3'}, 'q0',
 					   {
-						   	'q0': {Char('0'): 'q1', '_default': 'q0'},
-						    'q1': {Char('0'): 'q2', '_default': 'q0'},
-						    'q2': {Char('1'): 'q3', '_default': 'q2'},
-						    'q3': {'_default': 'q3'}
+						   	'q0': {Char('0'): 'q1', Char('1'): 'q0'},
+						    'q1': {Char('0'): 'q2', Char('1'): 'q0'},
+						    'q2': {Char('1'): 'q3', Char('0'): 'q2'},
+						    'q3': {Char('0'): 'q3', Char('1'): 'q3'}
 					   },
 					   {'q3'})
 
@@ -60,3 +60,5 @@ contains_001_dfa_c = dfa_compliment(contains_001_dfa, 'contains_001_dfa_c')
 print(f'Accepting states of {contains_001_dfa.name}: {contains_001_dfa.F}')
 contains_001_dfa = dfa_compliment(contains_001_dfa_c, 'contains_001_dfa')
 print(f'Accepting states of {contains_001_dfa_c.name}: {contains_001_dfa_c.F}')
+
+print(f'Example of an accepting string for {contains_001_dfa.name}: {contains_001_dfa.get_accepted()}')

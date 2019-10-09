@@ -33,6 +33,33 @@ class DFA():
 				qi =  self.δ[qi][s[i]]
 		return qi in self.F
 
+	def get_accepted(self):
+		'''
+			Does not work with DFAs that utilize the '_default' key
+			I will probably remove that because it looks like it will cause
+			more problems down the road.
+		'''
+		v = set()
+		a = []
+
+		def accept(qi):
+			if qi in self.F:
+				return True
+			elif qi in v:
+				return False
+			v.add(qi)
+
+			for c in self.Σ:
+				if accept(self.δ[qi][c]):
+					a.append(c)
+					return True
+			return False
+
+		accept(self.q0)
+
+		return String(a[::-1], self.Σ)
+		
+
 	def trace(self, s):
 		states = []
 		if self.accepts(s):
