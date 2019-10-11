@@ -8,6 +8,7 @@ class String(list):
 		self.a = a
 		
 	def is_empty(self):
+		#print(self)
 		if self == [Char()]:
 			# if the string is just the empty character then its empty
 			return True

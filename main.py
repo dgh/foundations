@@ -3,6 +3,7 @@ from alphabet import Alphabet
 from string import String
 from dfa import DFA
 
+from pprint import pprint
 import tests as dfas
 
 def cross(d1, d2, cond, name):
@@ -83,7 +84,7 @@ print('even_length == odd_length =>', equal(dfas.even_length, dfas.odd_length)) 
 
 print('even_length ⊆ consecutive_ones_and_contains_001 =>', subset(dfas.even_length, dfas.consecutive_ones_and_contains_001)) # Expected to be False because '00' which is in even_length is not a part of consecutive_ones_and_contains_001
 
-# Outputing examples of what are acceptable strings from each. The first eight of even_length are not found in consecutive_ones_and_contains_001
+#Outputing examples of what are acceptable strings from each. The first eight of even_length are not found in consecutive_ones_and_contains_001
 # print('\n'*2)
 # print('even_length = {')
 # for x in range(48):
@@ -91,9 +92,38 @@ print('even_length ⊆ consecutive_ones_and_contains_001 =>', subset(dfas.even_l
 # 	if dfas.even_length.accepts(s):
 # 		print('\t', s)
 # print('}')
-# print('consecutive_ones_and_contains_001 = {')
+# print('odd_length = {')
 # for x in range(48):
 # 	s = binary.generate_nth_string(x)
-# 	if dfas.consecutive_ones_and_contains_001.accepts(s):
+# 	if dfas.odd_length.accepts(s):
 # 		print('\t', s)
 # print('}')
+
+# a = intersect(dfas.even_length, complement(dfas.odd_length))
+# print('Q', a.Q)
+# print('q0', a.q0)
+# pprint(a.δ)
+# print('F', a.F)
+# if a.get_accepted():
+# 	print('is a subset accepted:', a.get_accepted())
+# else:
+# 	print('not a subset accepted:', a.get_accepted())
+
+test_d = DFA('test_d', binary,
+				 {'qA', 'qB', 'qC', 'qD'}, 'qA',
+				 {
+				 	'qA': {Char('0'): 'qB', Char('1'): 'qC'},
+				 	'qB': {Char('0'): 'qB', Char('1'): 'qB'},
+				 	'qC': {Char('0'): 'qD', Char('1'): 'qC'},
+				 	'qD': {Char('0'): 'qD', Char('1'): 'qD'}
+				 },
+				 {'qD'})
+
+print(test_d.accepts(String([Char('1'), Char('0')], binary)))
+print('get_accepted:', test_d.get_accepted())
+
+if test_d.get_accepted():
+	print('not a sub set')
+else:
+	print('is subset')
+#print(dfas.even_length.get_accepted())

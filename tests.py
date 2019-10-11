@@ -247,6 +247,9 @@ if __name__ == '__main__':
 	test_cases = [([], False), ('0', True), ('1', False), ('00', True), ('01', False), ('10', True), ('11', False), ('000', True), ('001', False), ('010', True), ('011', False), ('1110', True)]
 	run_dfa_tests(even_binary, test_cases)
 
+	test_cases = [([], False), ('0', True), ('1', False), ('00', True), ('01', False), ('10', True), ('11', False), ('000', True), ('001', False), ('010', True), ('011', False), ('1110', True)]
+	run_dfa_tests(complement(even_binary), test_cases)
+
 	# Test DFA that accepts odd binary numbers
 	test_cases = [([], False), ('0', False), ('1', True), ('00', False), ('01', True), ('10', False), ('11', True), ('000', False), ('001', True), ('010', False), ('011', True), ('1011', True)]
 	run_dfa_tests(odd_binary, test_cases)
