@@ -86,7 +86,8 @@ class DFA():
 		return True
 
 	def __contains__(self, other):
-		new = self.intersect(~other)
+		# other (A) in self (B)
+		new = other.intersect(~self)
 		if new.get_accepted():
 			return False
 		return True

@@ -269,16 +269,20 @@ if __name__ == '__main__':
 	#run_dfa_tests(even_length_and_only_ones, test_cases)
 
 	# Test if contains_001 is a subset of each test DFA
-	test_cases = [(contains_001, True), (consecutive_ones_or_contains_001, False), (consecutive_ones_and_contains_001, True)]
+	test_cases = [(contains_001, True), (consecutive_ones_or_contains_001, True), (consecutive_ones_and_contains_001, False)]
 	run_dfa_subset_tests(contains_001, test_cases)
 
 	# Test if consecutive_zeros is a subset of each test DFA
-	test_cases = [(consecutive_zeros, True), (consecutive_ones_or_contains_001, False), (consecutive_ones_and_contains_001, True)]
+	test_cases = [(consecutive_zeros, True), (consecutive_ones_or_contains_001, False), (consecutive_ones_and_contains_001, False), (contains_001, False)]
 	run_dfa_subset_tests(consecutive_zeros, test_cases)
+
+	###############################
 
 	# Test if consecutive_zeros is a subset of each test DFA
 	test_cases = [(even_length, True), (consecutive_ones_or_contains_001, False), (consecutive_ones_and_contains_001, False)]
 	run_dfa_subset_tests(even_length, test_cases)
+
+	###############################
 
 	# Test if only_zeros is a subset of each test DFA
 	test_cases = [(only_zeros, True), (odd_length, False), (consecutive_zeros, False)]
@@ -295,3 +299,4 @@ if __name__ == '__main__':
 	# Test if consecutive_ones_and_contains_001 is equal to each test DFA
 	test_cases = [(consecutive_ones_and_contains_001, True), (only_ones, False), (~consecutive_ones_and_contains_001, False), (consecutive_ones_or_contains_001, False)]
 	run_dfa_equality_tests(consecutive_ones_and_contains_001, test_cases)
+

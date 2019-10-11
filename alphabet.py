@@ -20,7 +20,7 @@ class Alphabet(list):
 			the length of the nth string. Return the nth string
 			of the alphabet.
 		'''
-		if not n: return String([Char()], self)
+		if not n: return String([], self)
 		# |A|^l
 		l = int(log(n + 1, len(self))) # l = layer
 		i =  n + 1 - len(self) ** l # i = layer index + 1

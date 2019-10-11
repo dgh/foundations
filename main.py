@@ -36,10 +36,29 @@ def run_dfa_subset_tests(d1, tests):
 binary = dfas.binary
 alpha = dfas.alpha
 
-test_cases = [([], False), ('dave', True), ('jay', False), ('evad', False), ('daved', False), ('d', False), ('a', False), ('v', False), ('e', False), ('#dave', False), ('', False), ('#', False)]
-run_dfa_tests(dfas.dave, test_cases)
+#test_cases = [([], False), ('dave', True), ('jay', False), ('evad', False), ('daved', False), ('d', False), ('a', False), ('v', False), ('e', False), ('#dave', False), ('', False), ('#', False)]
+#run_dfa_tests(dfas.dave, test_cases)
 
-print('has_a_zero ⊆ even_binary =>', dfas.has_a_zero in dfas.even_binary)
-print('has_a_zero ⊆ even_binary =>', dfas.even_binary in dfas.has_a_zero)
-print('even_binary ⊆ has_a_zero =>', dfas.even_binary in dfas.has_a_zero)
-print('even_binary ⊆ has_a_zero =>', dfas.has_a_zero in dfas.even_binary)
+# print('has_a_zero ⊆ even_binary =>', dfas.has_a_zero in dfas.even_binary) # Expected to be False 
+# print('even_binary ⊆ has_a_zero =>', dfas.even_binary in dfas.has_a_zero) # Expected to be True 
+
+print('even_length ⊆ odd_length =>', dfas.even_length in dfas.odd_length) # Expected to be False but return True
+print('odd_length ⊆ even_length =>', dfas.odd_length in dfas.even_length) # Expected to be False returns False
+print('even_length == odd_length =>', dfas.even_length == dfas.odd_length) # Expected to be False returns False
+
+print('even_length ⊆ consecutive_ones_and_contains_001 =>', dfas.even_length in dfas.consecutive_ones_and_contains_001) # Expected to be False because '00' which is in even_length is not a part of consecutive_ones_and_contains_001
+
+# Outputing examples of what are acceptable strings from each. The first eight of even_length are not found in consecutive_ones_and_contains_001
+print('\n'*2)
+print('even_length = {')
+for x in range(48):
+	s = binary.generate_nth_string(x)
+	if dfas.even_length.accepts(s):
+		print('\t', s)
+print('}')
+print('consecutive_ones_and_contains_001 = {')
+for x in range(48):
+	s = binary.generate_nth_string(x)
+	if dfas.consecutive_ones_and_contains_001.accepts(s):
+		print('\t', s)
+print('}')
