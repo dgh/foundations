@@ -98,6 +98,12 @@ class DFA():
 	def __contains__(self, other):
 		return self.subset(other)
 
+	def __eq__(self, other):
+		'''
+			if both sides are a subset of each other then they are equal
+		'''
+		return self in other and other in self
+
 	def __invert__(self):
 		'''
 			returns the complement of the DFA with a new name
