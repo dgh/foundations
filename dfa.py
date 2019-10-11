@@ -11,20 +11,6 @@ class DFA():
 		self.F = F
 
 	def accepts(self, s):
-		'''
-			Transitioning with '_default' is useful for a 'shadow realm' state
-			where you go to if an input is incorrect and the DFA won't accept it.
-		'''
-		if self.Q:
-			if not s:
-				return False
-			elif s == [Char()]:
-				return True
-		else:
-			if s.is_empty():
-				return True
-			return False
-
 		qi = self.q0
 		for c in s:
 			qi = self.δ[qi][c]
@@ -87,16 +73,23 @@ class DFA():
 	def intersect(self, other):
 		return self.cross(other, bool.__and__, f'{self.name}_and_{other.name}')
 
-	def subset(self, other):
+	#def subset(self, other):
 		'''
 			let A, B both be DFAs
 			C := B intersect A^c
 			A is a subset of B iff C does not have any acceptable strings
 		'''
-		return not other.intersect(~self).get_accepted()
+	#	return not other.intersect(~self).get_accepted()
 
 	def __contains__(self, other):
-		return self.subset(other)
+		'''
+			a in b
+		'''
+		new = self.intersect(~other)
+		if new.get_accepted():
+			return False
+		return True
+		# return self.subset(other)
 
 	def __eq__(self, other):
 		'''

@@ -3,27 +3,44 @@ from alphabet import Alphabet
 from string import String
 from dfa import DFA
 
-def test_dfa(d, s, expected):
-	if d.accepts(s) != expected:
-		print(f'Test of {d.name} FAILED with {s}, expected {expected} but got {not expected}!')
-		return False
-	return True
+def run_dfa_tests(d, tests):
+	def test_dfa(d, s, expected):
+		if d.accepts(s) != expected:
+			print(f'Test of {d.name} FAILED with {s}, expected {expected} but got {not expected}!')
+			return False
+		return True
 
-def run_dfa_tests(d, cases):
 	passed = 0
-	for test in cases:
-		if test_dfa(d, String(test[0], d.Σ), test[1]):
+	for case in tests:
+		if test_dfa(d, String(case[0], d.Σ), case[1]):
 			passed += 1
-	print(f'{passed}/{len(cases)} tests PASSED for {d.name}!')
+	print(f'{passed}/{len(tests)} tests PASSED for {d.name}!')
+	return passed
+
+def run_dfa_subset_tests(d1, tests):
+	def test_dfa_subset(d1, d2, expected):
+		if (d1 in d2) != expected:
+			print(f'Test if {d1.name} ⊆ {d2.name} FAILED, expected {expected} but got {not expected}!')
+			return False
+		return True
+
+	passed = 0
+	for case in tests:
+		if test_dfa_subset(d1, case[0], case[1]):
+			passed += 1
+	print(f'{passed}/{len(tests)} subset tests PASSED for {d1.name}!')
 	return passed
 
 binary = Alphabet([Char('0'), Char('1')])
 alpha = Alphabet([Char(c) for c in 'adejyv#"'])
 
 no_strings = DFA('no_strings', binary,
-					 {}, None,
-					 {},
-					 {})
+					 {'q0', 'q1'}, 'q0',
+					 {
+						'q0': {Char('0'): 'q0', Char('1'): 'q0'},
+						'q1': {Char('0'): 'q1', Char('1'): 'q1'},
+					 },
+					 {'q1'})
 
 empty_string = DFA('empty_string', binary,
 					   {'q0', 'q1'}, 'q0',
@@ -162,15 +179,15 @@ even_length_and_only_ones = even_length.intersect(only_ones)
 
 if __name__ == '__main__':
 	# Test DFA that does not accept anything
-	test_cases = [([], True), ([Char()], False), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False)]
+	test_cases = [([], False), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False), ('1111', False)]
 	run_dfa_tests(no_strings, test_cases)
 
 	# Test DFA that accepts even length strings
-	test_cases = [([Char()], True), ('0', False), ('1', False), ('00', True), ('01', True), ('10', True), ('11', True), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', True)]
+	test_cases = [([], True), ('0', False), ('1', False), ('00', True), ('01', True), ('10', True), ('11', True), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', True)]
 	run_dfa_tests(even_length, test_cases)
 
 	# Test DFA that accepts the empty string
-	test_cases = [([], False), ([Char()], True), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False)]
+	test_cases = [([], True), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False), ('1111', False)]
 	run_dfa_tests(empty_string, test_cases)
 
 	# Test DFA that accepts odd length strings
@@ -226,7 +243,7 @@ if __name__ == '__main__':
 	run_dfa_tests(consecutive_ones_or_contains_001, test_cases)
 	
 	# Test DFA that accepts strings accepted by either even_length or only_ones
-	test_cases = [([], False), ('0', False), ('01', True), ('00', True), ('000', False), ('001', False), ('010', False), ('101', False), ('111', True), ('1111', True), ('11111', True), ('111111', True)]
+	test_cases = [([], True), ('0', False), ('01', True), ('00', True), ('000', False), ('001', False), ('010', False), ('101', False), ('111', True), ('1111', True), ('11111', True), ('111111', True)]
 	run_dfa_tests(even_length_or_only_ones, test_cases)
 
 	# Test DFA that accepts strings accepted by either consecutive_ones and contains_001
@@ -235,4 +252,19 @@ if __name__ == '__main__':
 	
 	# Test DFA that accepts strings accepted by either even_length and only_ones
 	test_cases = [([], False), ('0', False), ('01', False), ('00', False), ('000', False), ('001', False), ('11', True), ('1111', True), ('111111', True), ('11111111', True), ('1111111111', True), ('111111111111', True)]
-	run_dfa_tests(even_length_and_only_ones, test_cases)
+	#run_dfa_tests(even_length_and_only_ones, test_cases)
+
+	# Test if contains_001 is a subset of each test DFA
+	test_cases = [(contains_001, True), (consecutive_ones_or_contains_001, False), (consecutive_ones_and_contains_001, True)]
+	run_dfa_subset_tests(contains_001, test_cases)
+
+	# Test if consecutive_zeros is a subset of each test DFA
+	test_cases = [(consecutive_zeros, True), (consecutive_ones_or_contains_001, False), (consecutive_ones_and_contains_001, True)]
+	run_dfa_subset_tests(consecutive_zeros, test_cases)
+
+	# Test if consecutive_zeros is a subset of each test DFA
+	test_cases = [(even_length, True), (consecutive_ones_or_contains_001, False), (consecutive_ones_and_contains_001, False)]
+	run_dfa_subset_tests(even_length, test_cases)
+
+	test_cases = [(only_zeros, True), (odd_length, False), (consecutive_zeros, False)]
+	run_dfa_subset_tests(only_zeros, test_cases)
