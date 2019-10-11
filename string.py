@@ -1,5 +1,4 @@
 from char import Char
-from alphabet import Alphabet
 
 class String(list):
 	def __init__(self, s, a):
