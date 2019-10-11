@@ -82,9 +82,6 @@ class DFA():
 	#	return not other.intersect(~self).get_accepted()
 
 	def __contains__(self, other):
-		'''
-			a in b
-		'''
 		new = self.intersect(~other)
 		if new.get_accepted():
 			return False
@@ -93,6 +90,7 @@ class DFA():
 
 	def __eq__(self, other):
 		'''
+			Note: this was already here before commiting Task Complete #20
 			if both sides are a subset of each other then they are equal
 		'''
 		return self in other and other in self
