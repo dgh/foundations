@@ -73,13 +73,17 @@ class DFA():
 	def intersect(self, other):
 		return self.cross(other, bool.__and__, f'{self.name}_and_{other.name}')
 
-	#def subset(self, other):
+	def subset(self, other):
 		'''
 			let A, B both be DFAs
 			C := B intersect A^c
 			A is a subset of B iff C does not have any acceptable strings
 		'''
 	#	return not other.intersect(~self).get_accepted()
+		new = self.intersect(~other)
+		if new.get_accepted():
+			return False
+		return True
 
 	def __contains__(self, other):
 		new = self.intersect(~other)

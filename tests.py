@@ -31,6 +31,20 @@ def run_dfa_subset_tests(d1, tests):
 	print(f'{passed}/{len(tests)} subset tests PASSED for {d1.name}!')
 	return passed
 
+def run_dfa_equality_tests(d1, tests):
+	def test_dfa_equality(d1, d2, expected):
+		if (d1 == d2) != expected :
+			print(f'Test if {d1.name} == {d2.name} FAILED, expected {expected} but got {not expected}!')
+			return False
+		return True
+
+	passed = 0
+	for case in tests:
+		if test_dfa_equality(d1, case[0], case[1]):
+			passed += 1
+	print(f'{passed}/{len(tests)} equality tests PASSED for {d1.name}!')
+	return passed
+
 binary = Alphabet([Char('0'), Char('1')])
 alpha = Alphabet([Char(c) for c in 'adejyv#"'])
 
@@ -266,5 +280,18 @@ if __name__ == '__main__':
 	test_cases = [(even_length, True), (consecutive_ones_or_contains_001, False), (consecutive_ones_and_contains_001, False)]
 	run_dfa_subset_tests(even_length, test_cases)
 
+	# Test if only_zeros is a subset of each test DFA
 	test_cases = [(only_zeros, True), (odd_length, False), (consecutive_zeros, False)]
 	run_dfa_subset_tests(only_zeros, test_cases)
+
+	# Test if only_zeros is equal to each test DFA
+	test_cases = [(only_zeros, True), (only_ones, False), (~only_zeros, False), (~~only_zeros, True)]
+	run_dfa_equality_tests(only_zeros, test_cases)
+
+	# Test if consecutive_ones_or_contains_001 is equal to each test DFA
+	test_cases = [(consecutive_ones_or_contains_001, True), (only_ones, False), (~consecutive_ones_or_contains_001, False), (~~consecutive_ones_or_contains_001, True)]
+	run_dfa_equality_tests(consecutive_ones_or_contains_001, test_cases)
+
+	# Test if consecutive_ones_and_contains_001 is equal to each test DFA
+	test_cases = [(consecutive_ones_and_contains_001, True), (only_ones, False), (~consecutive_ones_and_contains_001, False), (consecutive_ones_or_contains_001, False)]
+	run_dfa_equality_tests(consecutive_ones_and_contains_001, test_cases)

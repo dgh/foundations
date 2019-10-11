@@ -37,7 +37,7 @@ binary = dfas.binary
 alpha = dfas.alpha
 
 test_cases = [([], False), ('dave', True), ('jay', False), ('evad', False), ('daved', False), ('d', False), ('a', False), ('v', False), ('e', False), ('#dave', False), ('', False), ('#', False)]
-#run_dfa_tests(dfas.dave, test_cases)
+run_dfa_tests(dfas.dave, test_cases)
 
 print('has_a_zero ⊆ even_binary =>', dfas.has_a_zero in dfas.even_binary)
 print('has_a_zero ⊆ even_binary =>', dfas.even_binary in dfas.has_a_zero)
