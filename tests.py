@@ -157,6 +157,9 @@ has_a_zero = DFA('has_a_zero', binary,
 consecutive_ones_or_contains_001 = consecutive_ones.union(contains_001)
 even_length_or_only_ones = even_length.union(only_ones)
 
+consecutive_ones_and_contains_001 = consecutive_ones.intersect(contains_001)
+even_length_and_only_ones = even_length.intersect(only_ones)
+
 if __name__ == '__main__':
 	# Test DFA that does not accept anything
 	test_cases = [([], True), ([Char()], False), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False)]
@@ -225,3 +228,11 @@ if __name__ == '__main__':
 	# Test DFA that accepts strings accepted by either even_length or only_ones
 	test_cases = [([], False), ('0', False), ('01', True), ('00', True), ('000', False), ('001', False), ('010', False), ('101', False), ('111', True), ('1111', True), ('11111', True), ('111111', True)]
 	run_dfa_tests(even_length_or_only_ones, test_cases)
+
+	# Test DFA that accepts strings accepted by either consecutive_ones and contains_001
+	test_cases = [([], False), ('0', False), ('01', False), ('11', False), ('111', False), ('110', False), ('0011', True), ('10011', True), ('00011', True), ('11001', True), ('111001', True), ('1001111', True)]
+	run_dfa_tests(consecutive_ones_and_contains_001, test_cases)
+	
+	# Test DFA that accepts strings accepted by either even_length and only_ones
+	test_cases = [([], False), ('0', False), ('01', False), ('00', False), ('000', False), ('001', False), ('11', True), ('1111', True), ('111111', True), ('11111111', True), ('1111111111', True), ('111111111111', True)]
+	run_dfa_tests(even_length_and_only_ones, test_cases)
