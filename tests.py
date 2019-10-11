@@ -154,63 +154,74 @@ has_a_zero = DFA('has_a_zero', binary,
 				 },
 				 {'q1'})
 
+consecutive_ones_or_contains_001 = consecutive_ones.union(contains_001)
+even_length_or_only_ones = even_length.union(only_ones)
+
 if __name__ == '__main__':
 	# Test DFA that does not accept anything
-	tests = [([], True), ([Char()], False), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False)]
-	run_dfa_tests(no_strings, tests)
+	test_cases = [([], True), ([Char()], False), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False)]
+	run_dfa_tests(no_strings, test_cases)
 
 	# Test DFA that accepts even length strings
-	tests = [([Char()], True), ('0', False), ('1', False), ('00', True), ('01', True), ('10', True), ('11', True), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', True)]
-	run_dfa_tests(even_length, tests)
+	test_cases = [([Char()], True), ('0', False), ('1', False), ('00', True), ('01', True), ('10', True), ('11', True), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', True)]
+	run_dfa_tests(even_length, test_cases)
 
 	# Test DFA that accepts the empty string
-	tests = [([], False), ([Char()], True), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False)]
-	run_dfa_tests(empty_string, tests)
+	test_cases = [([], False), ([Char()], True), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False)]
+	run_dfa_tests(empty_string, test_cases)
 
 	# Test DFA that accepts odd length strings
-	tests = [([], False), ('0', True), ('1', True), ('00', False), ('01', False), ('10', False), ('11', False), ('000', True), ('001', True), ('010', True), ('011', True), ('0000', False)]
-	run_dfa_tests(odd_length, tests)
+	test_cases = [([], False), ('0', True), ('1', True), ('00', False), ('01', False), ('10', False), ('11', False), ('000', True), ('001', True), ('010', True), ('011', True), ('0000', False)]
+	run_dfa_tests(odd_length, test_cases)
 
 	# Test DFA that accepts even binary numbers
-	tests = [([], False), ('0', True), ('1', False), ('00', True), ('01', False), ('10', True), ('11', False), ('000', True), ('001', False), ('010', True), ('011', False), ('1110', True)]
-	run_dfa_tests(even_binary, tests)
+	test_cases = [([], False), ('0', True), ('1', False), ('00', True), ('01', False), ('10', True), ('11', False), ('000', True), ('001', False), ('010', True), ('011', False), ('1110', True)]
+	run_dfa_tests(even_binary, test_cases)
 
 	# Test DFA that accepts odd binary numbers
-	tests = [([], False), ('0', False), ('1', True), ('00', False), ('01', True), ('10', False), ('11', True), ('000', False), ('001', True), ('010', False), ('011', True), ('1011', True)]
-	run_dfa_tests(odd_binary, tests)
+	test_cases = [([], False), ('0', False), ('1', True), ('00', False), ('01', True), ('10', False), ('11', True), ('000', False), ('001', True), ('010', False), ('011', True), ('1011', True)]
+	run_dfa_tests(odd_binary, test_cases)
 
 	# Test DFA that accepts strings with some consecutive zeros
-	tests = [([], False), ('0', False), ('1', False), ('00', True), ('01', False), ('10', False), ('11', False), ('000', True), ('001', True), ('0000', True), ('0100', True), ('010010', True)]
-	run_dfa_tests(consecutive_zeros, tests)
+	test_cases = [([], False), ('0', False), ('1', False), ('00', True), ('01', False), ('10', False), ('11', False), ('000', True), ('001', True), ('0000', True), ('0100', True), ('010010', True)]
+	run_dfa_tests(consecutive_zeros, test_cases)
 
 	# Test DFA that accepts strings with some consecutive ones
-	tests = [([], False), ('0', False), ('1', False), ('11', True), ('10', False), ('01', False), ('00', False), ('111', True), ('110', True), ('1111', True), ('1011', True), ('101101', True)]
-	run_dfa_tests(consecutive_ones, tests)
+	test_cases = [([], False), ('0', False), ('1', False), ('11', True), ('10', False), ('01', False), ('00', False), ('111', True), ('110', True), ('1111', True), ('1011', True), ('101101', True)]
+	run_dfa_tests(consecutive_ones, test_cases)
 
 	# Test DFA that accepts a string that contains 001 in it
-	tests = [([], False), ('0', False), ('1', False), ('11', False), ('10', False), ('01', False), ('001', True), ('1001', True), ('0001', True), ('11001', True), ('0011', True), ('000111', True)]
-	run_dfa_tests(contains_001, tests)
+	test_cases = [([], False), ('0', False), ('1', False), ('11', False), ('10', False), ('01', False), ('001', True), ('1001', True), ('0001', True), ('11001', True), ('0011', True), ('000111', True)]
+	run_dfa_tests(contains_001, test_cases)
 
 	# Test DFA that accepts strings of only ones
-	tests = [([], False), ('0', False), ('01', False), ('00', False), ('000', False), ('001', False), ('1', True), ('11', True), ('111', True), ('1111', True), ('11111', True), ('111111', True)]
-	run_dfa_tests(only_ones, tests)
+	test_cases = [([], False), ('0', False), ('01', False), ('00', False), ('000', False), ('001', False), ('1', True), ('11', True), ('111', True), ('1111', True), ('11111', True), ('111111', True)]
+	run_dfa_tests(only_ones, test_cases)
 
 	# Test DFA that accepts strings of only zeros
-	tests = [([], False), ('1', False), ('10', False), ('11', False), ('111', False), ('110', False), ('0', True), ('00', True), ('000', True), ('0000', True), ('00000', True), ('000000', True)]
-	run_dfa_tests(only_zeros, tests)
+	test_cases = [([], False), ('1', False), ('10', False), ('11', False), ('111', False), ('110', False), ('0', True), ('00', True), ('000', True), ('0000', True), ('00000', True), ('000000', True)]
+	run_dfa_tests(only_zeros, test_cases)
 
 	# Test DFA that accepts my name 'dave'
-	tests = [([], False), ('dave', True), ('jay', False), ('evad', False), ('daved', False), ('d', False), ('a', False), ('v', False), ('e', False), ('#dave', False), ('', False), ('#', False)]
-	run_dfa_tests(dave, tests) # We can only have one accepting string so I can't show 6 different passes
+	test_cases = [([], False), ('dave', True), ('jay', False), ('evad', False), ('daved', False), ('d', False), ('a', False), ('v', False), ('e', False), ('#dave', False), ('', False), ('#', False)]
+	run_dfa_tests(dave, test_cases) # We can only have one accepting string so I can't show 6 different passes
 
 	# Test DFA that starts with '#' to signify a comment
-	tests = [([], False), ('#', True), ('#dave', True), ('#jay', True), ('##', True), ('#dave#', True), ('#"jay"', True), ('dave', False), ('jay', False), ('dave#', False), ('jay##', False), ('', False)]
-	run_dfa_tests(comment, tests)
+	test_cases = [([], False), ('#', True), ('#dave', True), ('#jay', True), ('##', True), ('#dave#', True), ('#"jay"', True), ('dave', False), ('jay', False), ('dave#', False), ('jay##', False), ('', False)]
+	run_dfa_tests(comment, test_cases)
 
 	# Test DFA that accepts valid strings that start and end with a double qoute
-	tests = [([], False), ('""""', False), ('"', False), ('d"dave"', False), ('"jay"j', False), ('dave"', False), ('""', True), ('"dave"', True), ('"jay"', True), ('"#"', True), ('"#dave"', True), ('"e"', True)]
-	run_dfa_tests(valid_string, tests)
+	test_cases = [([], False), ('""""', False), ('"', False), ('d"dave"', False), ('"jay"j', False), ('dave"', False), ('""', True), ('"dave"', True), ('"jay"', True), ('"#"', True), ('"#dave"', True), ('"e"', True)]
+	run_dfa_tests(valid_string, test_cases)
 
 	# Test DFA that accepts strings that have a zero
-	tests = [([], False), ('0', True), ('01', True), ('00', True), ('000', True), ('001', True), ('010', True), ('11', False), ('111', False), ('1111', False), ('11111', False), ('111111', False)]
-	run_dfa_tests(has_a_zero, tests)
+	test_cases = [([], False), ('0', True), ('01', True), ('00', True), ('000', True), ('001', True), ('010', True), ('11', False), ('111', False), ('1111', False), ('11111', False), ('111111', False)]
+	run_dfa_tests(has_a_zero, test_cases)
+
+	# Test DFA that accepts strings accepted by either consecutive_ones or contains_001
+	test_cases = [([], False), ('0', False), ('01', False), ('11', True), ('111', True), ('110', True), ('010', False), ('0011', True), ('0001', True), ('00011', True), ('0000', False), ('01000', False)]
+	run_dfa_tests(consecutive_ones_or_contains_001, test_cases)
+	
+	# Test DFA that accepts strings accepted by either even_length or only_ones
+	test_cases = [([], False), ('0', False), ('01', True), ('00', True), ('000', False), ('001', False), ('010', False), ('101', False), ('111', True), ('1111', True), ('11111', True), ('111111', True)]
+	run_dfa_tests(even_length_or_only_ones, test_cases)
