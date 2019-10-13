@@ -18,16 +18,9 @@ class DFA():
 		return qi in self.F
 
 	def get_accepted(self):
-		'''
-			problem: we cant return no string, just the empty string
-			solution: be able to return nothing if nothing is acceptable
-						and return empty string if q0 is accepting
-						empty string ~= nothing
-						0 ~= null
-		'''
 		visited = set()
-		#dictionary = dict() # (A, C): '1' (C, D): '0'
 		s = []
+		
 		def accept(qi):
 			if qi in self.F:
 				return True
@@ -39,7 +32,6 @@ class DFA():
 			for c in self.Σ:
 				next_state = self.δ[qi][c];
 				if accept(next_state):
-					#dictionary[(qi, next_state)] = c
 					s.insert(0, c)
 					return True
 			return False
