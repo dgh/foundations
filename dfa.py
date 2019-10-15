@@ -1,6 +1,3 @@
-from char import Char
-from string import String
-
 class DFA():
 	def __init__(self, name, Σ, Q, q0, δ, F):
 		self.name = name

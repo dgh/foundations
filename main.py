@@ -2,9 +2,10 @@ from char import Char
 from alphabet import Alphabet
 from string import String
 from dfa import DFA
+from nfa import NFA
 
 from pprint import pprint
-import tests as dfas
+import tests as fa
 
 def cross(d1, d2, cond, name):
 	states = set()
@@ -69,61 +70,20 @@ def run_dfa_subset_tests(d1, tests):
 	print(f'{passed}/{len(tests)} subset tests PASSED for {d1.name}!')
 	return passed
 
-binary = dfas.binary
-alpha = dfas.alpha
+binary = fa.binary
+alpha = fa.alpha
 
-#test_cases = [([], False), ('dave', True), ('jay', False), ('evad', False), ('daved', False), ('d', False), ('a', False), ('v', False), ('e', False), ('#dave', False), ('', False), ('#', False)]
-#run_dfa_tests(dfas.dave, test_cases)
-
-# print('has_a_zero ⊆ even_binary =>', dfas.has_a_zero in dfas.even_binary) # Expected to be False 
-# print('even_binary ⊆ has_a_zero =>', dfas.even_binary in dfas.has_a_zero) # Expected to be True 
-
-print('even_length ⊆ odd_length =>', subset(dfas.even_length, dfas.odd_length)) # Expected to be False but return True
-print('odd_length ⊆ even_length =>', subset(dfas.odd_length, dfas.even_length)) # Works, False
-print('even_length == odd_length =>', equal(dfas.even_length, dfas.odd_length)) # Works, False
-
-print('even_length ⊆ consecutive_ones_and_contains_001 =>', subset(dfas.even_length, dfas.consecutive_ones_and_contains_001)) # Expected to be False because '00' which is in even_length is not a part of consecutive_ones_and_contains_001
-
-#Outputing examples of what are acceptable strings from each. The first eight of even_length are not found in consecutive_ones_and_contains_001
-# print('\n'*2)
-# print('even_length = {')
-# for x in range(48):
-# 	s = binary.generate_nth_string(x)
-# 	if dfas.even_length.accepts(s):
-# 		print('\t', s)
-# print('}')
-# print('odd_length = {')
-# for x in range(48):
-# 	s = binary.generate_nth_string(x)
-# 	if dfas.odd_length.accepts(s):
-# 		print('\t', s)
-# print('}')
-
-# a = intersect(dfas.even_length, complement(dfas.odd_length))
-# print('Q', a.Q)
-# print('q0', a.q0)
-# pprint(a.δ)
-# print('F', a.F)
-# if a.get_accepted():
-# 	print('is a subset accepted:', a.get_accepted())
-# else:
-# 	print('not a subset accepted:', a.get_accepted())
-
-test_d = DFA('test_d', binary,
+test_nfa = NFA('test_nfa', binary,
 				 {'qA', 'qB', 'qC', 'qD'}, 'qA',
 				 {
-				 	'qA': {Char('0'): 'qB', Char('1'): 'qC'},
-				 	'qB': {Char('0'): 'qB', Char('1'): 'qB'},
-				 	'qC': {Char('0'): 'qD', Char('1'): 'qC'},
-				 	'qD': {Char('0'): 'qD', Char('1'): 'qD'}
+				 	'qA': {Char('0'): ['qB'], Char('1'): ['qC']},
+				 	'qB': {Char('0'): ['qB'], Char('1'): ['qB'], 'ε': ['qD']},
+				 	'qC': {Char('0'): ['qD'], Char('1'): ['qC']},
+				 	'qD': {Char('0'): ['qD'], Char('1'): ['qD']}
 				 },
 				 {'qD'})
 
-print(test_d.accepts(String([Char('1'), Char('0')], binary)))
-print('get_accepted:', test_d.get_accepted())
+print(test_nfa.accepts(String([Char('1'), Char('1'), Char('0'), Char('1')], binary)))
 
-if test_d.get_accepted():
-	print('not a sub set')
-else:
-	print('is subset')
-#print(dfas.even_length.get_accepted())
+test_cases = [([], False), ('0', True), ('1', False), ('00', True), ('01', False), ('10', True), ('11', False), ('000', True), ('001', False), ('010', True), ('011', False), ('1110', True)]
+#run_dfa_tests(even_binary, test_cases)

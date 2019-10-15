@@ -220,11 +220,41 @@ has_a_zero = DFA('has_a_zero', binary,
 				 },
 				 {'q1'})
 
+odd_number_of_ones = DFA('odd_number_of_ones', binary,
+						 {'q0', 'q1'}, 'q0',
+						 {
+						 	'q0': {Char('0'): 'q0', Char('1'): 'q1'},
+						 	'q1': {Char('0'): 'q1', Char('1'): 'q0'}
+						 },
+						 {'q1'})
+
 consecutive_ones_or_contains_001 = union(consecutive_ones, contains_001)
 even_length_or_only_ones = union(even_length, only_ones)
 
 consecutive_ones_and_contains_001 = intersect(consecutive_ones, contains_001)
 even_length_and_only_ones = intersect(even_length, only_ones)
+
+intersect_test = intersect(odd_number_of_ones, even_length)
+intersect_test_manual = DFA('intersect_test_manual', binary,
+							{('q0', 'q0'), ('q0', 'q1'), ('q1', 'q0'), ('q1', 'q1')}, ('q0', 'q0'),
+							{
+								('q0', 'q0'): {Char('0'): ('q0', 'q1'), Char('1'): ('q1', 'q1')},
+								('q0', 'q1'): {Char('0'): ('q0', 'q0'), Char('1'): ('q1', 'q0')},
+								('q1', 'q0'): {Char('0'): ('q1', 'q1'), Char('1'): ('q0', 'q1')},
+								('q1', 'q1'): {Char('0'): ('q1', 'q0'), Char('1'): ('q0', 'q0')}
+							},
+							{('q1', 'q0')})
+
+union_test = union(odd_number_of_ones, even_length)
+union_test_manual = DFA('union_test_manual', binary,
+							{('q0', 'q0'), ('q0', 'q1'), ('q1', 'q0'), ('q1', 'q1')}, ('q0', 'q0'),
+							{
+								('q0', 'q0'): {Char('0'): ('q0', 'q1'), Char('1'): ('q1', 'q1')},
+								('q0', 'q1'): {Char('0'): ('q0', 'q0'), Char('1'): ('q1', 'q0')},
+								('q1', 'q0'): {Char('0'): ('q1', 'q1'), Char('1'): ('q0', 'q1')},
+								('q1', 'q1'): {Char('0'): ('q1', 'q0'), Char('1'): ('q0', 'q0')}
+							},
+							{('q0', 'q0'), ('q1', 'q0'), ('q1', 'q1')})
 
 if __name__ == '__main__':
 	# Test DFA that does not accept anything
@@ -247,7 +277,7 @@ if __name__ == '__main__':
 	test_cases = [([], False), ('0', True), ('1', False), ('00', True), ('01', False), ('10', True), ('11', False), ('000', True), ('001', False), ('010', True), ('011', False), ('1110', True)]
 	run_dfa_tests(even_binary, test_cases)
 
-	test_cases = [([], False), ('0', True), ('1', False), ('00', True), ('01', False), ('10', True), ('11', False), ('000', True), ('001', False), ('010', True), ('011', False), ('1110', True)]
+	test_cases = [([], True), ('0', False), ('1', True), ('00', False), ('01', True), ('10', False), ('11', True), ('000', False), ('001', True), ('010', False), ('011', True), ('1110', False)]
 	run_dfa_tests(complement(even_binary), test_cases)
 
 	# Test DFA that accepts odd binary numbers
@@ -314,13 +344,9 @@ if __name__ == '__main__':
 	test_cases = [(consecutive_zeros, True), (consecutive_ones_or_contains_001, False), (consecutive_ones_and_contains_001, False), (contains_001, False)]
 	run_dfa_subset_tests(consecutive_zeros, test_cases)
 
-	###############################
-
 	# Test if consecutive_zeros is a subset of each test DFA
 	test_cases = [(even_length, True), (consecutive_ones_or_contains_001, False), (consecutive_ones_and_contains_001, False)]
 	run_dfa_subset_tests(even_length, test_cases)
-
-	###############################
 
 	# Test if only_zeros is a subset of each test DFA
 	test_cases = [(only_zeros, True), (odd_length, False), (consecutive_zeros, False)]
@@ -338,3 +364,10 @@ if __name__ == '__main__':
 	test_cases = [(consecutive_ones_and_contains_001, True), (only_ones, False), (complement(consecutive_ones_and_contains_001), False), (consecutive_ones_or_contains_001, False)]
 	run_dfa_equality_tests(consecutive_ones_and_contains_001, test_cases)
 
+	# Test if intersect and equality functions work
+	test_cases = [(intersect_test, True), (intersect_test_manual, True), (union(odd_number_of_ones, even_length), False)]
+	run_dfa_equality_tests(intersect_test, test_cases)
+
+	# Test if union and equality functions work
+	test_cases = [(union_test, True), (union_test_manual, True), (intersect(odd_number_of_ones, even_length), False)]
+	run_dfa_equality_tests(union_test, test_cases)
