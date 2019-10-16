@@ -1,3 +1,5 @@
+from string import String
+
 class DFA():
 	def __init__(self, name, Σ, Q, q0, δ, F):
 		self.name = name
@@ -18,7 +20,7 @@ class DFA():
 		visited = set()
 		s = []
 		
-		def accept(qi):
+		def traverse(qi):
 			if qi in self.F:
 				return True
 			elif qi in visited:
@@ -27,86 +29,66 @@ class DFA():
 			visited.add(qi)
 
 			for c in self.Σ:
-				next_state = self.δ[qi][c];
-				if accept(next_state):
+				next_state = self.δ[qi][c]
+				if traverse(next_state):
 					s.insert(0, c)
 					return True
+
 			return False
 
-		if self.q0 in self.F:
-			''' return empty'''
-			return True
-
-		accept(self.q0)
-		
-		return s
-
-
-	def trace(self, s):
-		states = []
-		if self.accepts(s):
-			qi = self.q0
-			for c in s:
-				states.append(qi)
-				qi =  self.δ[qi][c]
-			return states
+		if traverse(self.q0):
+			return String(s)
 
 		return False
 
-	# def cross(self, other, cond, name):
-	# 	states = set()
-	# 	accepts = set()
-	# 	delta = dict()
+	def trace(self, s):
+		states = []
+		qi = self.q0
+		for c in s:
+			states.append(qi)
+			qi =  self.δ[qi][c]
+		return states
 
-	# 	for qi1 in self.Q:
-	# 		for qi2 in other.Q:
-	# 			states.add((qi1, qi2))
-	# 			delta[(qi1, qi2)] = dict()
-	# 			for c in self.Σ:
-	# 				delta[(qi1, qi2)][c] = (self.δ[qi1][c], other.δ[qi2][c])
+	def cross(self, other, cond, name):
+		states = set()
+		accepts = set()
+		delta = dict()
 
-	# 	for (qi1, qi2) in states:
-	# 		if cond(qi1 in self.F, qi2 in other.F):
-	# 			accepts.add((qi1, qi2))
+		for qi1 in self.Q:
+			for qi2 in other.Q:
+				states.add((qi1, qi2))
+				delta[(qi1, qi2)] = dict()
+				for c in self.Σ:
+					delta[(qi1, qi2)][c] = (self.δ[qi1][c], other.δ[qi2][c])
 
-	# 	return DFA(name, self.Σ, states, (self.q0, other.q0), delta, accepts)
+		for (qi1, qi2) in states:
+			if cond(qi1 in self.F, qi2 in other.F):
+				accepts.add((qi1, qi2))
 
-	# def union(self, other):
-	# 	return self.cross(other, bool.__or__, f'{self.name}_or_{other.name}')
+		return DFA(name, self.Σ, states, (self.q0, other.q0), delta, accepts)
 
-	# def intersect(self, other):
-	# 	return self.cross(other, bool.__and__, f'{self.name}_and_{other.name}')
+	def union(self, other):
+		return self.cross(other, bool.__or__, f'{self.name}_or_{other.name}')
 
-	# def is_subset_of(self, other):
-	# 	'''
-	# 		let A, B both be DFAs
-	# 		C := B intersect A^c
-	# 		A is a subset of B iff C does not have any acceptable strings
-	# 	'''
-	# 	# self (A) is subset of self (B)
-	# 	# new = self.intersect(~other)
-	# 	# if new.get_accepted():
-	# 	# 	return False
-	# 	# return True
-	# 	return not self.intersect(~other).get_accepted()
+	def intersect(self, other):
+		return self.cross(other, bool.__and__, f'{self.name}_and_{other.name}')
 
-	# def __contains__(self, other):
-	# 	# other (A) in self (B)
-	# 	new = other.intersect(~self)
-	# 	if new.get_accepted():
-	# 		return False
-	# 	return True
-	# 	# return self.subset(other)
+	def complement(self):
+		return DFA(f'{self.name}_c', self.Σ, self.Q, self.q0, self.δ, self.Q - self.F)
 
-	# def __eq__(self, other):
-	# 	'''
-	# 		Note: this was already here before commiting Task Complete #20
-	# 		if both sides are a subset of each other then they are equal
-	# 	'''
-	# 	return self in other and other in self
+	def subset(self, other):
+		if self.intersect(other.complement()).get_accepted():
+			return False
+		return True
 
-	# def __invert__(self):
-	# 	'''
-	# 		returns the complement of the DFA with a new name
-	# 	'''
-	# 	return DFA(f'{self.name}_c', self.Σ, self.Q, self.q0, self.δ, self.Q - self.F)
+	def equal(self, other):
+		return self.subset(other) and other.subset(self)
+
+	def __contains__(self, other):
+		return other.subset(self)
+
+	def __eq__(self, other):
+		return self in other and other in self
+
+	def __invert__(self):
+		return self.complement()
