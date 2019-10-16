@@ -68,5 +68,20 @@ print(test_nfa.name, 'should accept: ', test_string, '=>', test_nfa.accepts(test
 #print(fa.odd_binary.get_accepted())
 #print(fa.odd_binary.accepts(fa.odd_binary.get_accepted()))
 
-# for i in range(1, 54):
-# 	print(abc_alpha.generate_nth_string(i))
+
+print('Results:')
+A = []
+B = []
+for i in range(1, 200):
+	s = binary.generate_nth_string(i)
+	if fa.union_test.accepts(s):
+		A.append(s)
+	if fa.odd_number_of_ones.intersect(fa.even_length).accepts(s):
+		B.append(s)
+
+print(A)
+print(B)
+
+for s in A:
+	if not (s in B):
+		print(s)

@@ -323,7 +323,7 @@ if __name__ == '__main__':
 	run_dfa_subset_tests(consecutive_zeros, test_cases)
 
 	# Test if consecutive_zeros is a subset of each test DFA
-	test_cases = [(even_length, True), (consecutive_ones_or_contains_001, False), (consecutive_ones_and_contains_001, False)]
+	test_cases = [(even_length, True), (consecutive_ones_or_contains_001, True), (consecutive_ones_and_contains_001, True)]
 	run_dfa_subset_tests(even_length, test_cases)
 
 	# Test if only_zeros is a subset of each test DFA
@@ -343,9 +343,9 @@ if __name__ == '__main__':
 	run_dfa_equality_tests(consecutive_ones_and_contains_001, test_cases)
 
 	# Test if intersect and equality functions work
-	test_cases = [(intersect_test, True), (intersect_test_manual, True), (odd_number_of_ones.union(even_length), False)]
+	test_cases = [(intersect_test, True), (intersect_test_manual, True), (odd_number_of_ones.union(even_length), True)]
 	run_dfa_equality_tests(intersect_test, test_cases)
 
 	# Test if union and equality functions work
-	test_cases = [(union_test, True), (union_test_manual, True), (odd_number_of_ones.intersect(even_length), False)]
+	test_cases = [(union_test, True), (union_test_manual, True), (odd_number_of_ones.intersect(even_length), True)]
 	run_dfa_equality_tests(union_test, test_cases)
