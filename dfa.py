@@ -1,3 +1,4 @@
+from char import Char
 from string import String
 
 class DFA():
@@ -35,6 +36,9 @@ class DFA():
 					return True
 
 			return False
+
+		if self.q0 in self.F:
+			return String([Char()])
 
 		if traverse(self.q0):
 			return String(s)
