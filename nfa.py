@@ -7,6 +7,15 @@ class NFA():
 		self.δ = δ
 		self.F = F
 
+	def fromDFA(name, d):
+		δ = dict()
+		for state in d.δ:
+			δ[state] = dict()
+			for c in d.δ[state]:
+				δ[state][c] = [d.δ[state][c]]
+
+		return NFA(name, d.Σ, d.Q, d.q0, δ, d.F)
+
 	def accepts(self, s):
 		def epsilon_closure(qi):
 			stack = []
