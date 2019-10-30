@@ -55,33 +55,20 @@ abc_alpha = Alphabet([Char('a'), Char('b'), Char('c')])
 test_nfa = NFA('test_nfa', binary,
 				 {'qA', 'qB', 'qC', 'qD'}, 'qA',
 				 {
-				 	'qA': {Char('0'): ['qB'], Char('1'): ['qC']},
+				 	'qA': {Char('0'): ['qA', 'qB'], Char('1'): ['qC']},
 				 	'qB': {Char('0'): ['qB'], Char('1'): ['qB'], 'ε': ['qD']},
 				 	'qC': {Char('0'): ['qD'], Char('1'): ['qC']},
 				 	'qD': {Char('0'): ['qD'], Char('1'): ['qD']}
 				 },
 				 {'qD'})
 
-test_string = String([Char('0'), Char('0')])
-print(test_nfa.name, 'should accept: ', test_string, '=>', test_nfa.accepts(test_string))
+test_string = String('0110')
 
-#print(fa.odd_binary.get_accepted())
-#print(fa.odd_binary.accepts(fa.odd_binary.get_accepted()))
-
-
-print('Results:')
-A = []
-B = []
-for i in range(1, 200):
-	s = binary.generate_nth_string(i)
-	if fa.union_test.accepts(s):
-		A.append(s)
-	if fa.odd_number_of_ones.intersect(fa.even_length).accepts(s):
-		B.append(s)
-
-print(A)
-print(B)
-
-for s in A:
-	if not (s in B):
-		print(s)
+new_nfa = NFA.fromDFA('nfa_even_length', fa.even_length)
+new_nfa_2 = NFA('nfa_even_length_2', binary,
+						 {'q0', 'q1'}, 'q0',
+						 {
+						 	'q0': {Char('0'): ['q1'], Char('1'): ['q1']},
+						 	'q1': {Char('0'): ['q0'], Char('1'): ['q0']}
+						 },
+						 {'q0'})

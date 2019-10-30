@@ -19,8 +19,10 @@ class NFA():
 	def accepts(self, s):
 		def epsilon_closure(qi):
 			stack = []
-			visited = set()
-			stack.append(qi)
+			visited = set([qi])
+
+			if self.δ[qi].get('ε'):
+				stack.extend(self.δ[qi]['ε'])
 
 			while stack:
 				state = stack.pop()
@@ -39,6 +41,6 @@ class NFA():
 				for next_state in self.δ[qi][c]:
 					next_states.update(epsilon_closure(next_state))
 
-			states.update(next_states)
+			states = next_states
 
 		return True if (states & self.F) else False
