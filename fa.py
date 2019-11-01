@@ -50,20 +50,20 @@ binary = Alphabet([Char('0'), Char('1')])
 alpha = Alphabet([Char(c) for c in 'adejyv#"'])
 
 no_strings = DFA('no_strings', binary,
-					 {'q0', 'q1'}, 'q0',
-					 {
-						'q0': {Char('0'): 'q0', Char('1'): 'q0'},
-						'q1': {Char('0'): 'q1', Char('1'): 'q1'}
-					 },
-					 {'q1'})
+				{'q0', 'q1'}, 'q0',
+				{
+					'q0': {Char('0'): 'q0', Char('1'): 'q0'},
+					'q1': {Char('0'): 'q1', Char('1'): 'q1'}
+				},
+				{'q1'})
 
 empty_string = DFA('empty_string', binary,
-					   {'q0', 'q1'}, 'q0',
-					   {
-						'q0': {Char('0'): 'q1', Char('1'): 'q1'},
-						'q1': {Char('0'): 'q1', Char('1'): 'q1'}
-					   },
-					   {'q0'})
+				{'q0', 'q1'}, 'q0',
+				{
+					'q0': {Char('0'): 'q1', Char('1'): 'q1'},
+					'q1': {Char('0'): 'q1', Char('1'): 'q1'}
+				},
+				{'q0'})
 
 only_one_char = DFA('only_one_char', binary,
 					{'q0', 'q1', 'q2'}, 'q0',
@@ -75,133 +75,133 @@ only_one_char = DFA('only_one_char', binary,
 					{'q1'})
 
 even_length = DFA('even_length', binary,
-					  {'q0', 'q1'}, 'q0',
-					  {
-						'q0': {Char('0'): 'q1', Char('1'): 'q1'},
-						'q1': {Char('0'): 'q0', Char('1'): 'q0'}
-					  },
-					  {'q0'})
+				{'q0', 'q1'}, 'q0',
+				{
+					'q0': {Char('0'): 'q1', Char('1'): 'q1'},
+					'q1': {Char('0'): 'q0', Char('1'): 'q0'}
+				},
+				{'q0'})
 
 odd_length = DFA('odd_length', binary,
-					  {'q0', 'q1'}, 'q0',
-					  {
-					  	'q0': {Char('0'): 'q1', Char('1'): 'q1'},
-					  	'q1': {Char('0'): 'q0', Char('1'): 'q0'}
-					  },
-					  {'q1'})
+				{'q0', 'q1'}, 'q0',
+				{
+					'q0': {Char('0'): 'q1', Char('1'): 'q1'},
+					'q1': {Char('0'): 'q0', Char('1'): 'q0'}
+				},
+				{'q1'})
 
 even_binary = DFA('even_binary', binary,
-					  {'q0', 'q1', 'q2'}, 'q0',
-					  {
-					  	'q0': {Char('0'): 'q2', Char('1'): 'q1'},
-					  	'q1': {Char('0'): 'q2', Char('1'): 'q1'},
-					  	'q2': {Char('0'): 'q2', Char('1'): 'q1'}
-					  },
-					  {'q2'})
+				{'q0', 'q1', 'q2'}, 'q0',
+				{
+					'q0': {Char('0'): 'q2', Char('1'): 'q1'},
+					'q1': {Char('0'): 'q2', Char('1'): 'q1'},
+					'q2': {Char('0'): 'q2', Char('1'): 'q1'}
+				},
+				{'q2'})
 
 odd_binary = DFA('odd_binary', binary,
-					  {'q0', 'q1', 'q2'}, 'q0',
-					  {
-					  	'q0': {Char('0'): 'q2', Char('1'): 'q1'},
-					  	'q1': {Char('0'): 'q2', Char('1'): 'q1'},
-					  	'q2': {Char('0'): 'q2', Char('1'): 'q1'}
-					  },
-					  {'q1'})
+				{'q0', 'q1', 'q2'}, 'q0',
+				{
+					'q0': {Char('0'): 'q2', Char('1'): 'q1'},
+					'q1': {Char('0'): 'q2', Char('1'): 'q1'},
+					'q2': {Char('0'): 'q2', Char('1'): 'q1'}
+				},
+				{'q1'})
 
 consecutive_zeros = DFA('consecutive_zeros', binary,
-							{'q0', 'q1', 'q2'}, 'q0',
-							{
-								'q0': {Char('0'): 'q1', Char('1'): 'q0'},
-								'q1': {Char('0'): 'q2', Char('1'): 'q0'},
-								'q2': {Char('0'): 'q2', Char('1'): 'q2'}
-							},
-							{'q2'})
+						{'q0', 'q1', 'q2'}, 'q0',
+						{
+							'q0': {Char('0'): 'q1', Char('1'): 'q0'},
+							'q1': {Char('0'): 'q2', Char('1'): 'q0'},
+							'q2': {Char('0'): 'q2', Char('1'): 'q2'}
+						},
+						{'q2'})
 
 consecutive_ones = DFA('consecutive_ones', binary,
-						   {'q0', 'q1', 'q2'}, 'q0',
-						   {
-						   	'q0': {Char('1'): 'q1', Char('0'): 'q0'},
-						    'q1': {Char('1'): 'q2', Char('0'): 'q0'},
-						    'q2': {Char('1'): 'q2', Char('0'): 'q2'},
-						   },
-						   {'q2'})
-
-contains_001 = DFA('contains_001', binary,
-					   {'q0', 'q1', 'q2', 'q3'}, 'q0',
-					   {
-					   		'q0': {Char('0'): 'q1', Char('1'): 'q0'},
-					   		'q1': {Char('0'): 'q2', Char('1'): 'q0'},
-					   		'q2': {Char('0'): 'q2', Char('1'): 'q3'},
-					   		'q3': {Char('0'): 'q3', Char('1'): 'q3'}
-					   },
-					   {'q3'})
-
-only_ones = DFA('only_ones', binary,
 					{'q0', 'q1', 'q2'}, 'q0',
 					{
-						'q0': {Char('0'): 'q2', Char('1'): 'q1'},
-						'q1': {Char('0'): 'q2', Char('1'): 'q1'},
-						'q2': {Char('0'): 'q2', Char('1'): 'q2'}
+						'q0': {Char('1'): 'q1', Char('0'): 'q0'},
+						'q1': {Char('1'): 'q2', Char('0'): 'q0'},
+						'q2': {Char('1'): 'q2', Char('0'): 'q2'},
 					},
-					{'q1'})
+					{'q2'})
+
+contains_001 = DFA('contains_001', binary,
+				{'q0', 'q1', 'q2', 'q3'}, 'q0',
+				{
+						'q0': {Char('0'): 'q1', Char('1'): 'q0'},
+						'q1': {Char('0'): 'q2', Char('1'): 'q0'},
+						'q2': {Char('0'): 'q2', Char('1'): 'q3'},
+						'q3': {Char('0'): 'q3', Char('1'): 'q3'}
+				},
+				{'q3'})
+
+only_ones = DFA('only_ones', binary,
+				{'q0', 'q1', 'q2'}, 'q0',
+				{
+					'q0': {Char('0'): 'q2', Char('1'): 'q1'},
+					'q1': {Char('0'): 'q2', Char('1'): 'q1'},
+					'q2': {Char('0'): 'q2', Char('1'): 'q2'}
+				},
+				{'q1'})
 
 only_zeros = DFA('only_zeros', binary,
-					 {'q0', 'q1', 'q2'}, 'q0',
-					 {
-					 	'q0': {Char('0'): 'q1', Char('1'): 'q2'},
-					 	'q1': {Char('0'): 'q1', Char('1'): 'q2'},
-					 	'q2': {Char('0'): 'q2', Char('1'): 'q2'}
-					 },
-					 {'q1'})
+				{'q0', 'q1', 'q2'}, 'q0',
+				{
+					'q0': {Char('0'): 'q1', Char('1'): 'q2'},
+					'q1': {Char('0'): 'q1', Char('1'): 'q2'},
+					'q2': {Char('0'): 'q2', Char('1'): 'q2'}
+				},
+				{'q1'})
 
 dave = DFA('dave', alpha,
-			   {'q0', 'q1', 'q2', 'q3', 'q4', 'q5'}, 'q0',
-			   {
-				'q0': {Char('a'): 'q5', Char('d'): 'q1', Char('e'): 'q5', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q5', Char('#'): 'q5', Char('"'): 'q5'},
-				'q1': {Char('a'): 'q2', Char('d'): 'q5', Char('e'): 'q5', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q5', Char('#'): 'q5', Char('"'): 'q5'},
-				'q2': {Char('a'): 'q5', Char('d'): 'q5', Char('e'): 'q5', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q3', Char('#'): 'q5', Char('"'): 'q5'},
-				'q3': {Char('a'): 'q5', Char('d'): 'q5', Char('e'): 'q4', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q5', Char('#'): 'q5', Char('"'): 'q5'},
-				'q4': {Char('a'): 'q5', Char('d'): 'q5', Char('e'): 'q5', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q5', Char('#'): 'q5', Char('"'): 'q5'},
-				'q5': {Char('a'): 'q5', Char('d'): 'q5', Char('e'): 'q5', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q5', Char('#'): 'q5', Char('"'): 'q5'}
-			   },
-			   {'q4'})
+		{'q0', 'q1', 'q2', 'q3', 'q4', 'q5'}, 'q0',
+		{
+			'q0': {Char('a'): 'q5', Char('d'): 'q1', Char('e'): 'q5', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q5', Char('#'): 'q5', Char('"'): 'q5'},
+			'q1': {Char('a'): 'q2', Char('d'): 'q5', Char('e'): 'q5', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q5', Char('#'): 'q5', Char('"'): 'q5'},
+			'q2': {Char('a'): 'q5', Char('d'): 'q5', Char('e'): 'q5', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q3', Char('#'): 'q5', Char('"'): 'q5'},
+			'q3': {Char('a'): 'q5', Char('d'): 'q5', Char('e'): 'q4', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q5', Char('#'): 'q5', Char('"'): 'q5'},
+			'q4': {Char('a'): 'q5', Char('d'): 'q5', Char('e'): 'q5', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q5', Char('#'): 'q5', Char('"'): 'q5'},
+			'q5': {Char('a'): 'q5', Char('d'): 'q5', Char('e'): 'q5', Char('j'): 'q5', Char('y'): 'q5', Char('v'): 'q5', Char('#'): 'q5', Char('"'): 'q5'}
+		},
+		{'q4'})
 
 comment = DFA('comment', alpha,
-						 {'q0', 'q1', 'q2'}, 'q0',
-						 {
-							'q0': {Char('a'): 'q2', Char('d'): 'q2', Char('e'): 'q2', Char('j'): 'q2', Char('y'): 'q2', Char('v'): 'q2', Char('#'): 'q1', Char('"'): 'q2'},
-							'q1': {Char('a'): 'q1', Char('d'): 'q1', Char('e'): 'q1', Char('j'): 'q1', Char('y'): 'q1', Char('v'): 'q1', Char('#'): 'q1', Char('"'): 'q1'},
-							'q2': {Char('a'): 'q2', Char('d'): 'q2', Char('e'): 'q2', Char('j'): 'q2', Char('y'): 'q2', Char('v'): 'q2', Char('#'): 'q2', Char('"'): 'q2'}
-						 },
-						 {'q1'})
+			{'q0', 'q1', 'q2'}, 'q0',
+			{
+				'q0': {Char('a'): 'q2', Char('d'): 'q2', Char('e'): 'q2', Char('j'): 'q2', Char('y'): 'q2', Char('v'): 'q2', Char('#'): 'q1', Char('"'): 'q2'},
+				'q1': {Char('a'): 'q1', Char('d'): 'q1', Char('e'): 'q1', Char('j'): 'q1', Char('y'): 'q1', Char('v'): 'q1', Char('#'): 'q1', Char('"'): 'q1'},
+				'q2': {Char('a'): 'q2', Char('d'): 'q2', Char('e'): 'q2', Char('j'): 'q2', Char('y'): 'q2', Char('v'): 'q2', Char('#'): 'q2', Char('"'): 'q2'}
+			},
+			{'q1'})
 
 valid_string = DFA('valid_string', alpha,
-					   {'q0', 'q1', 'q2', 'q3', 'q4'}, 'q0',
-					   {
-						'q0': {Char('a'): 'q4', Char('d'): 'q4', Char('e'): 'q4', Char('j'): 'q4', Char('y'): 'q4', Char('v'): 'q4', Char('#'): 'q4', Char('"'): 'q1'},
-						'q1': {Char('a'): 'q2', Char('d'): 'q2', Char('e'): 'q2', Char('j'): 'q2', Char('y'): 'q2', Char('v'): 'q2', Char('#'): 'q2', Char('"'): 'q3'},
-						'q2': {Char('a'): 'q2', Char('d'): 'q2', Char('e'): 'q2', Char('j'): 'q2', Char('y'): 'q2', Char('v'): 'q2', Char('#'): 'q2', Char('"'): 'q3'},
-						'q3': {Char('a'): 'q4', Char('d'): 'q4', Char('e'): 'q4', Char('j'): 'q4', Char('y'): 'q4', Char('v'): 'q4', Char('#'): 'q4', Char('"'): 'q4'},
-						'q4': {Char('a'): 'q4', Char('d'): 'q4', Char('e'): 'q4', Char('j'): 'q4', Char('y'): 'q4', Char('v'): 'q4', Char('#'): 'q4', Char('"'): 'q4'}
-					   },
-					   {'q3'})
+				{'q0', 'q1', 'q2', 'q3', 'q4'}, 'q0',
+				{
+					'q0': {Char('a'): 'q4', Char('d'): 'q4', Char('e'): 'q4', Char('j'): 'q4', Char('y'): 'q4', Char('v'): 'q4', Char('#'): 'q4', Char('"'): 'q1'},
+					'q1': {Char('a'): 'q2', Char('d'): 'q2', Char('e'): 'q2', Char('j'): 'q2', Char('y'): 'q2', Char('v'): 'q2', Char('#'): 'q2', Char('"'): 'q3'},
+					'q2': {Char('a'): 'q2', Char('d'): 'q2', Char('e'): 'q2', Char('j'): 'q2', Char('y'): 'q2', Char('v'): 'q2', Char('#'): 'q2', Char('"'): 'q3'},
+					'q3': {Char('a'): 'q4', Char('d'): 'q4', Char('e'): 'q4', Char('j'): 'q4', Char('y'): 'q4', Char('v'): 'q4', Char('#'): 'q4', Char('"'): 'q4'},
+					'q4': {Char('a'): 'q4', Char('d'): 'q4', Char('e'): 'q4', Char('j'): 'q4', Char('y'): 'q4', Char('v'): 'q4', Char('#'): 'q4', Char('"'): 'q4'}
+				},
+				{'q3'})
 
 has_a_zero = DFA('has_a_zero', binary,
-				 {'q0', 'q1', 'q2'}, 'q0',
-				 {
-				 	'q0': {Char('0'): 'q1', Char('1'): 'q2'},
-				 	'q1': {Char('0'): 'q1', Char('1'): 'q1'},
-				 	'q2': {Char('0'): 'q1', Char('1'): 'q2'}
-				 },
-				 {'q1'})
+				{'q0', 'q1', 'q2'}, 'q0',
+				{
+					'q0': {Char('0'): 'q1', Char('1'): 'q2'},
+					'q1': {Char('0'): 'q1', Char('1'): 'q1'},
+					'q2': {Char('0'): 'q1', Char('1'): 'q2'}
+				},
+				{'q1'})
 
 odd_number_of_ones = DFA('odd_number_of_ones', binary,
-						 {'q0', 'q1'}, 'q0',
-						 {
-						 	'q0': {Char('0'): 'q0', Char('1'): 'q1'},
-						 	'q1': {Char('0'): 'q1', Char('1'): 'q0'}
-						 },
-						 {'q1'})
+						{'q0', 'q1'}, 'q0',
+						{
+							'q0': {Char('0'): 'q0', Char('1'): 'q1'},
+							'q1': {Char('0'): 'q1', Char('1'): 'q0'}
+						},
+						{'q1'})
 
 consecutive_ones_or_contains_001 = consecutive_ones.union(contains_001)
 even_length_or_only_ones = even_length.union(only_ones)
@@ -222,14 +222,14 @@ intersect_test_manual = DFA('intersect_test_manual', binary,
 
 union_test = odd_number_of_ones.union(even_length)
 union_test_manual = DFA('union_test_manual', binary,
-							{('q0', 'q0'), ('q0', 'q1'), ('q1', 'q0'), ('q1', 'q1')}, ('q0', 'q0'),
-							{
-								('q0', 'q0'): {Char('0'): ('q0', 'q1'), Char('1'): ('q1', 'q1')},
-								('q0', 'q1'): {Char('0'): ('q0', 'q0'), Char('1'): ('q1', 'q0')},
-								('q1', 'q0'): {Char('0'): ('q1', 'q1'), Char('1'): ('q0', 'q1')},
-								('q1', 'q1'): {Char('0'): ('q1', 'q0'), Char('1'): ('q0', 'q0')}
-							},
-							{('q0', 'q0'), ('q1', 'q0'), ('q1', 'q1')})
+						{('q0', 'q0'), ('q0', 'q1'), ('q1', 'q0'), ('q1', 'q1')}, ('q0', 'q0'),
+						{
+							('q0', 'q0'): {Char('0'): ('q0', 'q1'), Char('1'): ('q1', 'q1')},
+							('q0', 'q1'): {Char('0'): ('q0', 'q0'), Char('1'): ('q1', 'q0')},
+							('q1', 'q0'): {Char('0'): ('q1', 'q1'), Char('1'): ('q0', 'q1')},
+							('q1', 'q1'): {Char('0'): ('q1', 'q0'), Char('1'): ('q0', 'q0')}
+						},
+						{('q0', 'q0'), ('q1', 'q0'), ('q1', 'q1')})
 
 nfa_n1 = NFA('nfa_n1', binary,
 			{'q1', 'q2', 'q3', 'q4', 'q5'}, 'q1',

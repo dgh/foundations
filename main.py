@@ -3,7 +3,7 @@ from alphabet import Alphabet
 from string import String
 from nfa import NFA
 
-import tests as fa
+import fa
 
 def run_dfa_tests(d, tests):
 	def test_dfa(d, s, expected):
@@ -49,29 +49,3 @@ def run_dfa_equality_tests(d1, tests):
 
 binary = fa.binary
 alpha = fa.alpha
-
-abc_alpha = Alphabet([Char('a'), Char('b'), Char('c')])
-
-test_nfa = NFA('test_nfa', binary,
-				 {'qA', 'qB', 'qC', 'qD'}, 'qA',
-				 {
-				 	'qA': {Char('0'): ['qA', 'qB'], Char('1'): ['qC']},
-				 	'qB': {Char('0'): ['qB'], Char('1'): ['qB'], 'ε': ['qD']},
-				 	'qC': {Char('0'): ['qD'], Char('1'): ['qC']},
-				 	'qD': {Char('0'): ['qD'], Char('1'): ['qD']}
-				 },
-				 {'qD'})
-
-test_string = String('0110')
-
-new_nfa = NFA.fromDFA('nfa_even_length', fa.even_length)
-new_nfa_2 = NFA('nfa_even_length_2', binary,
-						 {'q0', 'q1'}, 'q0',
-						 {
-						 	'q0': {Char('0'): ['q1'], Char('1'): ['q1']},
-						 	'q1': {Char('0'): ['q0'], Char('1'): ['q0']}
-						 },
-						 {'q0'})
-
-
-print(fa.nfa_n4.accepts(String('')))
