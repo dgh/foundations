@@ -72,3 +72,6 @@ new_nfa_2 = NFA('nfa_even_length_2', binary,
 						 	'q1': {Char('0'): ['q0'], Char('1'): ['q0']}
 						 },
 						 {'q0'})
+
+
+print(fa.nfa_n4.accepts(String('')))

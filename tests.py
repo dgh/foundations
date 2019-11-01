@@ -2,6 +2,7 @@ from char import Char
 from alphabet import Alphabet
 from string import String
 from dfa import DFA
+from nfa import NFA
 
 def run_dfa_tests(d, tests):
 	def test_dfa(d, s, expected):
@@ -229,6 +230,51 @@ union_test_manual = DFA('union_test_manual', binary,
 								('q1', 'q1'): {Char('0'): ('q1', 'q0'), Char('1'): ('q0', 'q0')}
 							},
 							{('q0', 'q0'), ('q1', 'q0'), ('q1', 'q1')})
+
+nfa_n1 = NFA('nfa_n1', binary,
+			{'q1', 'q2', 'q3', 'q4', 'q5'}, 'q1',
+			{
+				'q1': {Char('0'): ['q1'], Char('1'): ['q1', 'q2']},
+				'q2': {Char('0'): ['q3'], Char('1'): ['q5'], 'ε': ['q3']},
+				'q3': {Char('0'): ['q5'], Char('1'): ['q4']},
+				'q4': {Char('0'): ['q4'], Char('1'): ['q4']},
+				'q5': {Char('0'): ['q5'], Char('1'): ['q5']}
+			},
+			{'q4'})
+
+nfa_n2 = NFA('nfa_n2', binary,
+			{'q1', 'q2', 'q3', 'q4', 'q5'}, 'q1',
+			{
+				'q1': {Char('0'): ['q1'], Char('1'): ['q1', 'q2']},
+				'q2': {Char('0'): ['q3'], Char('1'): ['q3']},
+				'q3': {Char('0'): ['q4'], Char('1'): ['q4']},
+				'q4': {Char('0'): ['q5'], Char('1'): ['q5']},
+				'q5': {Char('0'): ['q5'], Char('1'): ['q5']}
+			},
+			{'q4'})
+
+nfa_n3 = NFA('nfa_n3', Alphabet([Char('0')]),
+			{'q0', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6'}, 'q0',
+			{
+				'q0': {Char('0'): ['q6'], 'ε': ['q1', 'q3']},
+				'q1': {Char('0'): ['q2']},
+				'q2': {Char('0'): ['q1']},
+				'q3': {Char('0'): ['q4']},
+				'q4': {Char('0'): ['q5']},
+				'q5': {Char('0'): ['q3']},
+				'q6': {Char('0'): ['q6']}
+			},
+			{'q1', 'q3'})
+
+nfa_n4 = NFA('nfa_n4', Alphabet([Char('a'), Char('b')]),
+			{'q1', 'q2', 'q3', 'q4'}, 'q1',
+			{
+				'q1': {Char('a'): ['q4'], Char('b'): ['q2'], 'ε': ['q3']},
+				'q2': {Char('a'): ['q2', 'q3'], Char('b'): ['q3']},
+				'q3': {Char('a'): ['q1'], Char('b'): ['q4']},
+				'q4': {Char('a'): ['q4'], Char('b'): ['q4']}
+			},
+			{'q1'})
 
 if __name__ == '__main__':
 	# Test DFA that does not accept anything
