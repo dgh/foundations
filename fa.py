@@ -34,7 +34,7 @@ def run_dfa_subset_tests(d1, tests):
 
 def run_dfa_equality_tests(d1, tests):
 	def test_dfa_equality(d1, d2, expected):
-		if (d1 == d2) != expected :
+		if (d1 == d2) != expected:
 			print(f'Test if {d1.name} == {d2.name} FAILED, expected {expected} but got {not expected}!')
 			return False
 		return True
@@ -45,6 +45,27 @@ def run_dfa_equality_tests(d1, tests):
 			passed += 1
 	print(f'{passed}/{len(tests)} equality tests PASSED for {d1.name}!')
 	return passed
+
+traces_cases = [
+		([(Char('0'), 'q1'), (Char('1'), 'q2'), (Char('0'), 'q3'), (Char('1'), 'q4'), (Char('1'), 'q4'), (Char('0'), 'q4')], True),
+		([(Char('1'), 'q2'), (Char(), 'q3'), (Char('1'), 'q4')], True),
+		([(Char('1'), 'q1'), (Char('0'), 'q1'), (Char('1'), 'q2'), (Char('0'), 'q3'), (Char('1'), 'q4')], True)
+	]
+
+def run_nfa_oracle_test(n1, tests):
+	def test_nfa_oracle(n1, s, t, expected):
+		if not n1.oracle(s, t, expected):
+			print(f'Test {n1.name}.oracle() FAILED, expected {expected} but got {not expected}!')
+			return False
+		return True
+
+	passed = 0
+	for case in tests:
+		s = String([t[0] for t in case[0]])
+		if test_nfa_oracle(n1, s, case[0], case[1]):
+			passed += 1
+	print(f'{passed}/{len(tests)} oracle tests PASSED for {n1.name}!')
+	return passed	
 
 binary = Alphabet([Char('0'), Char('1')])
 alpha = Alphabet([Char(c) for c in 'adejyv#"'])
@@ -395,3 +416,36 @@ if __name__ == '__main__':
 	# Test if union and equality functions work
 	test_cases = [(union_test, True), (union_test_manual, True), (odd_number_of_ones.intersect(even_length), False)]
 	run_dfa_equality_tests(union_test, test_cases)
+
+	# Test nfa_n1 traces [(Char(), Next State), ...]
+	test_cases = [
+		([(Char('0'), 'q1'), (Char('1'), 'q2'), (Char('0'), 'q3'), (Char('1'), 'q4'), (Char('1'), 'q4'), (Char('0'), 'q4')], True),
+		([(Char('1'), 'q1'), (Char('0'), 'q1'), (Char('1'), 'q2'), (Char('0'), 'q3'), (Char('1'), 'q4')], True),
+		([(Char('1'), 'q2'), (Char(), 'q3'), (Char('1'), 'q4')], True)
+	]
+	run_nfa_oracle_test(nfa_n1, test_cases)
+
+	# Test nfa_n2 traces, 1 in the third position from the end
+	test_cases = [
+		([(Char('0'), 'q1'), (Char('0'), 'q1'), (Char('0'), 'q1'), (Char('1'), 'q2'), (Char('0'), 'q3'), (Char('0'), 'q4')], True),
+		([(Char('0'), 'q1'), (Char('0'), 'q1'), (Char('1'), 'q2'), (Char('0'), 'q3'), (Char('0'), 'q4'), (Char('0'), 'q5')], False),
+		([(Char('1'), 'q2'), (Char('0'), 'q3'), (Char('0'), 'q4')], True)
+	]
+	run_nfa_oracle_test(nfa_n2, test_cases)
+
+	# Test nfa_n3 traces, all strings of the form 0^k where k is a multiple of 2 or 3
+	test_cases = [
+		([(Char(), 'q1')], True),
+		([(Char(), 'q1'), (Char('0'), 'q2'), (Char('0'), 'q1')], True),
+		([(Char(), 'q3'), (Char('0'), 'q4'), (Char('0'), 'q5'), (Char('0'), 'q3')], True),
+		([(Char(), 'q3'), (Char('0'), 'q4'), (Char('0'), 'q5'), (Char('0'), 'q3'), (Char('0'), 'q4'), (Char('0'), 'q5')], False)
+	]
+	run_nfa_oracle_test(nfa_n3, test_cases)
+
+	# Test nfa_n4 traces [(Char(), Next State), ...]
+	test_cases = [
+		([(Char(), 'q3'), (Char('a'), 'q1'), (Char('b'), 'q2'), (Char('b'), 'q3')], False),
+		([(Char('b'), 'q2'), (Char('a'), 'q2'), (Char('b'), 'q3'), (Char('a'), 'q1')], True),
+		([(Char(), 'q3'), (Char('a'), 'q1')], True)
+	]
+	run_nfa_oracle_test(nfa_n4, test_cases)

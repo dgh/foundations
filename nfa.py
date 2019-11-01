@@ -1,3 +1,5 @@
+from string import String
+
 class NFA():
 	def __init__(self, name, Σ, Q, q0, δ, F):
 		self.name = name
@@ -36,6 +38,8 @@ class NFA():
 		states = epsilon_closure(self.q0)
 
 		for c in s:
+			if c.is_empty(): continue
+
 			next_states = set()
 			for qi in states:
 				for next_state in self.δ[qi][c]:
@@ -44,3 +48,18 @@ class NFA():
 			states = next_states
 
 		return True if (states & self.F) else False
+
+	def oracle(self, s, trace, expected):
+		if s != String(''.join(str(t[0]) for t in trace)):
+			print(f'String<{s}> does not match the given trace for {self.name}!')
+			return False
+
+		qi = self.q0
+		for t in trace:
+			if t[1] in self.δ[qi].get(t[0]):
+				qi = t[1]
+			else:
+				print(f'{trace} is not a valid trace for {self.name}!')
+				return False
+
+		return self.accepts(s) == expected

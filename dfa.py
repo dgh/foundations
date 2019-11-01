@@ -13,6 +13,7 @@ class DFA():
 	def accepts(self, s):
 		qi = self.q0
 		for c in s:
+			if c.is_empty(): continue
 			qi = self.δ[qi][c]
 
 		return qi in self.F
