@@ -1,4 +1,5 @@
 from string import String
+from itertools import product
 
 class NFA():
 	def __init__(self, name, Σ, Q, q0, δ, F):
@@ -63,3 +64,24 @@ class NFA():
 				return False
 
 		return self.accepts(s) == expected
+
+	def cross(self, other, cond, name):
+		states = set()
+		accepts = set()
+		delta = dict()
+
+		for qi1 in self.Q:
+			for qi2 in other.Q:
+				states.add((qi1, qi2))
+				delta[(qi1, qi2)] = dict()
+				for c in self.Σ:
+					delta[(qi1, qi2)][c] = list(product(self.δ[qi1][c], other.δ[qi2][c]))
+					
+		for (qi1, qi2) in states:
+			if cond(qi1 in self.F, qi2 in other.F):
+				accepts.add((qi1, qi2))
+
+		return NFA(name, self.Σ, states, (self.q0, other.q0), delta, accepts)
+
+	def union(self, other):
+		return self.cross(other, bool.__or__, f'{self.name}_or_{other.name}')
