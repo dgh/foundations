@@ -461,3 +461,4 @@ if __name__ == '__main__':
 	# Test kleene star nfa_n3, every True example is something that would not be accepted orignally by n3 (0* length is prime)
 	test_cases = [('0', False), ('00000', True), ('0000000', True), ('00000000000', True), ('0000000000000', True), ('00000000000000000', True)]
 	run_dfa_tests(n3_kleene, test_cases)
+	
