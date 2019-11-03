@@ -1,6 +1,7 @@
 from string import String
 from alphabet import Alphabet
 from itertools import product
+from copy import deepcopy
 
 class NFA():
 	def __init__(self, name, Σ, Q, q0, δ, F):
@@ -92,7 +93,7 @@ class NFA():
 		name = self.name + '_concat_' + other.name
 		Σ = Alphabet(set(self.Σ).union(other.Σ))
 		Q = self.Q.union(set([other.name + '_' + s for s in other.Q]))
-		δ = self.δ.copy()
+		δ = deepcopy(self.δ)
 		q0 = self.q0
 		F = set([other.name + '_' + s for s in other.F])
 

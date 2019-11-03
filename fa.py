@@ -297,6 +297,8 @@ nfa_n4 = NFA('nfa_n4', Alphabet([Char('a'), Char('b')]),
 			},
 			{'q1'})
 
+n3_concat_n4 = nfa_n3.concat(nfa_n4)
+
 if __name__ == '__main__':
 	# Test DFA that does not accept anything
 	test_cases = [([], False), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False), ('1111', False)]
@@ -449,3 +451,7 @@ if __name__ == '__main__':
 		([(Char(), 'q3'), (Char('a'), 'q1')], True)
 	]
 	run_nfa_oracle_test(nfa_n4, test_cases)
+
+	# Test concat of nfa_n3 and nfa_n4
+	test_cases = [([], True), ('0', False), ('00', True), ('000', True), ('00000', False), ('00b', False), ('00baa', True), ('000a', True), ('baaba', True), ('ba', False), ('00bb', False), ('000bbab', False)]
+	run_dfa_tests(n3_concat_n4, test_cases)
