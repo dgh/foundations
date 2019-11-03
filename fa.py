@@ -299,6 +299,8 @@ nfa_n4 = NFA('nfa_n4', Alphabet([Char('a'), Char('b')]),
 
 n3_concat_n4 = nfa_n3.concat(nfa_n4)
 
+n3_kleene = nfa_n3.kleene()
+
 if __name__ == '__main__':
 	# Test DFA that does not accept anything
 	test_cases = [([], False), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False), ('1111', False)]
