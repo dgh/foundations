@@ -457,3 +457,7 @@ if __name__ == '__main__':
 	# Test concat of nfa_n3 and nfa_n4
 	test_cases = [([], True), ('0', False), ('00', True), ('000', True), ('00000', False), ('00b', False), ('00baa', True), ('000a', True), ('baaba', True), ('ba', False), ('00bb', False), ('000bbab', False)]
 	run_dfa_tests(n3_concat_n4, test_cases)
+
+	# Test kleene star nfa_n3, every True example is something that would not be accepted orignally by n3 (0* length is prime)
+	test_cases = [('0', False), ('00000', True), ('0000000', True), ('00000000000', True), ('0000000000000', True), ('00000000000000000', True)]
+	run_dfa_tests(n3_kleene, test_cases)

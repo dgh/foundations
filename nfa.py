@@ -115,11 +115,14 @@ class NFA():
 		name = self.name + '_kleene'
 		Σ = self.Σ
 		Q = self.Q.copy()
-		δ = self.δ.copy()
+		δ = deepcopy(self.δ)
 		q0 = 'k0'
-		F = self.F.copy()
+		F = {'k0'}
 
 		Q.add('k0')
-		δ['k0'] = {'k0': {'ε': list(F.union({self.q0}))}}
+		δ['k0'] = {'ε': list(F.union({self.q0}))}
+
+		for qi in self.F:
+			δ[qi]['ε'] = ['k0'] + (δ[qi].get('ε') or [])
 
 		return NFA(name, Σ, Q, q0, δ, F)
