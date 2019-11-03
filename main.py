@@ -50,7 +50,8 @@ def run_dfa_equality_tests(d1, tests):
 binary = fa.binary
 alpha = fa.alpha
 
-t = fa.nfa_n1.union(fa.nfa_n2)
+new = fa.nfa_n3.concat(fa.nfa_n4)
 
-print(t.accepts(String('1001'))) # -> False
-print(t.accepts(String('111'))) # -> True
+print(new.accepts(String('0baa')))		# -> False
+print(new.accepts(String('00baa')))		# -> True
+print(new.accepts(String('000baa')))	# -> True

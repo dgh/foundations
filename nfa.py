@@ -1,4 +1,5 @@
 from string import String
+from alphabet import Alphabet
 from itertools import product
 
 class NFA():
@@ -43,8 +44,9 @@ class NFA():
 
 			next_states = set()
 			for qi in states:
-				for next_state in self.δ[qi][c]:
-					next_states.update(epsilon_closure(next_state))
+				if self.δ[qi].get(c):
+					for next_state in self.δ[qi][c]:
+						next_states.update(epsilon_closure(next_state))
 
 			states = next_states
 
@@ -85,3 +87,25 @@ class NFA():
 
 	def union(self, other):
 		return self.cross(other, bool.__or__, f'{self.name}_or_{other.name}')
+
+	def concat(self, other):
+		name = self.name + '_concat_' + other.name
+		Σ = Alphabet(set(self.Σ).union(other.Σ))
+		Q = self.Q.union(set([other.name + '_' + s for s in other.Q]))
+		δ = self.δ.copy()
+		q0 = self.q0
+		F = set([other.name + '_' + s for s in other.F])
+
+		nδ = {}
+		for qi, transitions in other.δ.items():
+			new_state = other.name + '_' + qi
+			nδ[new_state] = dict()
+			for c, states in transitions.items():
+				nδ[new_state][c] = [other.name + '_' + a for a in states]
+
+		δ.update(nδ)
+
+		for qi in self.F:
+			δ[qi]['ε'] = [other.name + '_' + other.q0] + (δ[qi].get('ε') or [])
+
+		return NFA(name, Σ, Q, q0, δ, F)
