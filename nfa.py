@@ -1,3 +1,4 @@
+from dfa import DFA
 from string import String
 from alphabet import Alphabet
 from itertools import product
@@ -21,24 +22,24 @@ class NFA():
 
 		return NFA(name, d.Σ, d.Q, d.q0, δ, d.F)
 
+	def epsilon_closure(self, qi):
+		stack = []
+		visited = set([qi])
+
+		if self.δ[qi].get('ε'):
+			stack.extend(self.δ[qi]['ε'])
+
+		while stack:
+			state = stack.pop()
+			if state not in visited:
+				visited.add(state)
+				if self.δ[state].get('ε'):
+					stack.extend(self.δ[state]['ε'])
+
+		return visited
+
 	def accepts(self, s):
-		def epsilon_closure(qi):
-			stack = []
-			visited = set([qi])
-
-			if self.δ[qi].get('ε'):
-				stack.extend(self.δ[qi]['ε'])
-
-			while stack:
-				state = stack.pop()
-				if state not in visited:
-					visited.add(state)
-					if self.δ[state].get('ε'):
-						stack.extend(self.δ[state]['ε'])
-
-			return visited
-
-		states = epsilon_closure(self.q0)
+		states = self.epsilon_closure(self.q0)
 
 		for c in s:
 			if c.is_empty(): continue
@@ -47,7 +48,7 @@ class NFA():
 			for qi in states:
 				if self.δ[qi].get(c):
 					for next_state in self.δ[qi][c]:
-						next_states.update(epsilon_closure(next_state))
+						next_states.update(self.epsilon_closure(next_state))
 
 			states = next_states
 
@@ -126,3 +127,43 @@ class NFA():
 			δ[qi]['ε'] = ['k0'] + (δ[qi].get('ε') or [])
 
 		return NFA(name, Σ, Q, q0, δ, F)
+
+	def toDFA(self):
+		lookup = {}
+		new_states = {}
+		stack = [{self.q0}]
+		count = 0
+
+		while stack:
+			x = frozenset(stack.pop())
+			if x not in new_states:
+				closure = set()
+				for e in x:
+					closure.update(self.epsilon_closure(e))
+
+				closure = frozenset(closure)
+				new_states[x] = (count, closure)
+				
+				count += 1
+
+				lookup[x] = {}
+
+				for c in self.Σ:
+					next_states = set()
+					for qi in closure:
+						if self.δ[qi].get(c):
+							next_states.update(self.δ[qi][c])
+					lookup[x][c] = next_states
+				
+					stack.append(next_states)
+
+		δ = {}
+		for qi, v in new_states.items():
+			key = f'q{v[0]}'
+			δ[key] = {}
+			for c, t in lookup[qi].items():
+				δ[key][c] = f'q{new_states[frozenset(t)][0]}'
+
+		Q = set([f'q{x}' for x in range(0, count)])
+
+		return DFA('sd', self.Σ, Q, 'q0', δ, {'q4'})
