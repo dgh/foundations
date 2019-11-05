@@ -51,41 +51,33 @@ def run_dfa_equality_tests(d1, tests):
 binary = fa.binary
 alpha = fa.alpha
 
-new = fa.nfa_n3.concat(fa.nfa_n4)
+nfa_manual = NFA('ntest', binary,
+				{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}, 'A',
+				{
+					'A': {'ε': ['B', 'H']},
+					'B': {'ε': ['C', 'D']},
+					'C': {Char('1'): ['E']},
+					'D': {Char('0'): ['F']},
+					'E': {'ε': ['G']},
+					'F': {'ε': ['G']},
+					'G': {'ε': ['A', 'H']},
+					'H': {'ε': ['I']},
+					'I': {Char('1'): ['J']},
+					'J': {}
+				}, {'J'})
 
-#print(new.accepts(String('0baa')))		# -> False
-#print(new.accepts(String('00baa')))	# -> True
-#print(new.accepts(String('000baa')))	# -> True
+dfa_manual = DFA('fsa', binary,
+				{'A', 'B', 'C'}, 'A',
+				{
+					'A': {Char('0'): 'B', Char('1'): 'C'},
+					'B': {Char('0'): 'B', Char('1'): 'C'},
+					'C': {Char('0'): 'B', Char('1'): 'C'},
+				}, {'C'})
 
-test_n = NFA('(a|b)*abb', Alphabet([Char('a'), Char('b')]),
-			{'q0', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'}, 'q0',
-			{
-				'q0': {'ε': ['q1', 'q7']},
-				'q1': {'ε': ['q2', 'q4']},
-				'q2': {Char('a'): ['q3']},
-				'q3': {'ε': ['q6']},
-				'q4': {Char('b'): ['q5']},
-				'q5': {'ε': ['q6']},
-				'q6': {'ε': ['q1', 'q7']},
-				'q7': {Char('a'): ['q8']},
-				'q8': {Char('b'): ['q9']},
-				'q9': {Char('b'): ['q10']},
-				'q10': {}
-			}, {'q10'})
+dfa_from_nfa = nfa_manual.toDFA('dfa_from_nfa')
 
-test_d = DFA('(a|b)*abb', Alphabet([Char('a'), Char('b')]),
-			{'qA', 'qB', 'qC', 'qD', 'qE'}, 'qA',
-			{
-				'qA': {Char('a'): 'qB', Char('b'): 'qC'},
-				'qB': {Char('a'): 'qB', Char('b'): 'qD'},
-				'qC': {Char('a'): 'qB', Char('b'): 'qC'},
-				'qD': {Char('a'): 'qB', Char('b'): 'qE'},
-				'qE': {Char('a'): 'qB', Char('b'): 'qC'}
-			}, {'qE'})
-dd = test_n.toDFA()
-test_string = String('babb')
+for x in range(1, 16):
+	s = binary.generate_nth_string(x)
+	print(s, '=>', nfa_manual.accepts(s), dfa_from_nfa.accepts(s))
 
-# These three should all be equivalent
-print(test_n.accepts(test_string))
-print(test_d.accepts(test_string))
-print(dd.accepts(test_string))
+print("The toDFA function works:", dfa_from_nfa == dfa_manual)
