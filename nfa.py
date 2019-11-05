@@ -128,42 +128,37 @@ class NFA():
 
 		return NFA(name, Σ, Q, q0, δ, F)
 
-	def toDFA(self):
-		lookup = {}
-		new_states = {}
-		stack = [{self.q0}]
-		count = 0
+	def toDFA(self, name):
+		Σ = self.Σ.copy()
+		qi = frozenset(self.epsilon_closure(self.q0))
+		stack = [qi]
+		Q = set([qi])
+		δ = {}
+		F = set()
+
+		def set_closure(s):
+			e_set = set()
+			for q in s:
+				e_set = e_set.union(self.epsilon_closure(q))
+			return e_set
 
 		while stack:
-			x = frozenset(stack.pop())
-			if x not in new_states:
-				closure = set()
-				for e in x:
-					closure.update(self.epsilon_closure(e))
+			x = stack.pop()
+			δ[x] = {}
+			for c in Σ:
+				new_states = set()
+				for q in x:
+					if self.δ[q].get(c):
+						new_states.update(self.δ[q][c])
+	
+				new_states = frozenset(set_closure(new_states))
+				δ[x][c] = new_states
 
-				closure = frozenset(closure)
-				new_states[x] = (count, closure)
-				
-				count += 1
+				if new_states not in Q:
+					Q.add(new_states)
+					stack.append(new_states)
 
-				lookup[x] = {}
+				if new_states & self.F:
+					F.add(new_states)
 
-				for c in self.Σ:
-					next_states = set()
-					for qi in closure:
-						if self.δ[qi].get(c):
-							next_states.update(self.δ[qi][c])
-					lookup[x][c] = next_states
-				
-					stack.append(next_states)
-
-		δ = {}
-		for qi, v in new_states.items():
-			key = f'q{v[0]}'
-			δ[key] = {}
-			for c, t in lookup[qi].items():
-				δ[key][c] = f'q{new_states[frozenset(t)][0]}'
-
-		Q = set([f'q{x}' for x in range(0, count)])
-
-		return DFA('sd', self.Σ, Q, 'q0', δ, {'q4'})
+		return DFA(name, Σ, Q, qi, δ, F)
