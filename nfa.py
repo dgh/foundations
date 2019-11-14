@@ -162,3 +162,24 @@ class NFA():
 					F.add(new_states)
 
 		return DFA(name, Σ, Q, qi, δ, F)
+
+	def forking(self, s):
+		s = list(s)
+		
+		def rec(qi, si):
+			if len(s) - 1 < si:
+				return 'YES' if qi in self.F else 'NO'
+				
+			r = ''
+			c = self.δ[qi].get(s[si]) or []
+
+			if self.δ[qi].get('ε'):
+				c.extend(self.δ[qi]['ε'])
+
+			if c:
+				for t in c:
+					r += f'({s[si]}/{t}[{rec(t, si+1)}])'
+					
+			return r
+		
+		return f'({self.q0}[{rec(self.q0, 0)}])'

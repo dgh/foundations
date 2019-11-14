@@ -98,3 +98,5 @@ trace_tree3 = '(A[(0/A[(0/A[(0/A[(0/A[NO])])])])])'
 trace_tree4 = '(A[(0/A[(0/A[(0/A[(0/A[NO])])])])])'
 trace_tree5 = '(A[(1/A[(0/A[NO])])(1/B[(0/C[NO])])])'
 trace_tree6 = '(A[(1/A[(0/A[(0/A[(1/A[(0/A[(0/A[NO])])])(1/B[(0/C[(0/D[YES])])])])])])(1/B[(0/C[(0/D[(1/E[(0/E[(0/E[NO])])])])])])])'
+
+print(nfa_fork.forking(String('0100')))
