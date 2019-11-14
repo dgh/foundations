@@ -76,8 +76,19 @@ dfa_manual = DFA('fsa', binary,
 
 dfa_from_nfa = nfa_manual.toDFA('dfa_from_nfa')
 
-for x in range(1, 16):
-	s = binary.generate_nth_string(x)
-	print(s, '=>', nfa_manual.accepts(s), dfa_from_nfa.accepts(s))
+# for x in range(1, 16):
+# 	s = binary.generate_nth_string(x)
+# 	print(s, '=>', nfa_manual.accepts(s), dfa_from_nfa.accepts(s))
 
-print("The toDFA function works:", dfa_from_nfa == dfa_manual)
+# print("The toDFA function works:", dfa_from_nfa == dfa_manual)
+
+nfa_fork = NFA('nfa_fork', binary,
+				{'A', 'B', 'C', 'D'}, 'A',
+				{
+					'A': {Char('0'): ['A'], Char('1'): ['A', 'B']},
+					'B': {Char('0'): ['C'], Char('1'): ['C']},
+					'C': {Char('0'): ['D'], Char('1'): ['D']},
+					'D': {},
+				}, {'D'})
+
+trace_tree = '(A [(0/A [(1/A [(0/A [(0/A [NO])])])(1/B [(0/C [(0/D [YES])])])])])'

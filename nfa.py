@@ -162,35 +162,3 @@ class NFA():
 					F.add(new_states)
 
 		return DFA(name, Σ, Q, qi, δ, F)
-
-class tt():
-	def __init__(self):
-		self.start = 0
-
-class acc():
-	def __bool__(self): return True
-class rej():
-	def __bool__(self): return False
-class branch():
-	def __init__(self, c):
-		self.c = c
-		self.states = states
-
-# tt() = branch(Char('0'), ['q0']) branch(Char('1'), ['q1', 'q2'])
-
-#tt = (A, [((0, A), [((1, B), [((0, C), [((0, D), [YES])]), ((1, A), [((0, A), [((0, A), [NO])])])])
-# tt = ('A', [(
-# 			(0, 'A'), [
-# 				((1, 'B'), [
-# 						((0, 'C'), [(
-# 							(0, 'D'), [True]
-# 						)]), 
-# 						((1, 'A'), [(
-# 							(0, 'A'), [(
-# 								(0, 'A'), [False])])])])]
-# 			)]
-# 	 )
-
-# ('A',
-# 	[((0, 'A'), [((1, 'B'), [((0, 'C'), [((0, 'D'), [True])]),
-#       ((1, 'A'), [((0, 'A'), [((0, 'A'), [False])])])])])])

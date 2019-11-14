@@ -224,6 +224,15 @@ odd_number_of_ones = DFA('odd_number_of_ones', binary,
 						},
 						{'q1'})
 
+nfa_fork = NFA('nfa_fork', binary,
+				{'A', 'B', 'C', 'D'}, 'A',
+				{
+					'A': {Char('0'): ['A'], Char('1'): ['A', 'B']},
+					'B': {Char('0'): ['C'], Char('1'): ['C']},
+					'C': {Char('0'): ['D'], Char('1'): ['D']},
+					'D': {},
+				}, {'D'})
+
 consecutive_ones_or_contains_001 = consecutive_ones.union(contains_001)
 even_length_or_only_ones = even_length.union(only_ones)
 
