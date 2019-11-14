@@ -83,12 +83,18 @@ dfa_from_nfa = nfa_manual.toDFA('dfa_from_nfa')
 # print("The toDFA function works:", dfa_from_nfa == dfa_manual)
 
 nfa_fork = NFA('nfa_fork', binary,
-				{'A', 'B', 'C', 'D'}, 'A',
+				{'A', 'B', 'C', 'D', 'E'}, 'A',
 				{
 					'A': {Char('0'): ['A'], Char('1'): ['A', 'B']},
 					'B': {Char('0'): ['C'], Char('1'): ['C']},
 					'C': {Char('0'): ['D'], Char('1'): ['D']},
-					'D': {},
+					'D': {Char('0'): ['E'], Char('1'): ['E']},
+					'E': {Char('0'): ['E'], Char('1'): ['E']}
 				}, {'D'})
 
-trace_tree = '(A [(0/A [(1/A [(0/A [(0/A [NO])])])(1/B [(0/C [(0/D [YES])])])])])'
+trace_tree1 = '(A [(0/A [(1/A [(0/A [(0/A [NO])])])(1/B [(0/C [(0/D [YES])])])])])'
+trace_tree2 = '(A[(1/A[(0/A[(1/A[(0/A[(0/A[NO])])])(1/B[(0/C[(0/D[YES])])])])])(1/B[(0/C[(1/D[(0/E[(0/E[NO])])])])])])'
+trace_tree3 = '(A[(0/A[(0/A[(0/A[(0/A[NO])])])])])'
+trace_tree4 = '(A[(0/A[(0/A[(0/A[(0/A[NO])])])])])'
+trace_tree5 = '(A[(1/A[(0/A[NO])])(1/B[(0/C[NO])])])'
+trace_tree6 = '(A[(1/A[(0/A[(0/A[(1/A[(0/A[(0/A[NO])])])(1/B[(0/C[(0/D[YES])])])])])])(1/B[(0/C[(0/D[(1/E[(0/E[(0/E[NO])])])])])])])'
