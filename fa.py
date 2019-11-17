@@ -3,6 +3,7 @@ from alphabet import Alphabet
 from string import String
 from dfa import DFA
 from nfa import NFA
+from regex import *
 
 def run_dfa_tests(d, tests):
 	def test_dfa(d, s, expected):
@@ -471,3 +472,11 @@ if __name__ == '__main__':
 	test_cases = [('0', False), ('00000', True), ('0000000', True), ('00000000000', True), ('0000000000000', True), ('00000000000000000', True)]
 	run_dfa_tests(n3_kleene, test_cases)
 	
+	test = re_cat(re_c('a'), re_cat(re_c('b'), re_c('c')))
+	test = re_star(re_u('0', '1'))
+	test = re_cat(re_c('b'), re_cat(re_star(re_c('a')), re_star(re_c('h'))))
+	test = re_star(re_cat(re_u(re_c('0'), re_c('1')), re_u(re_c('0'), re_c('1'))))
+	test = re_cat(re_star(re_u(re_c('0'), re_c('1'))), re_cat(re_c('1'), re_star(re_u(re_c('0'), re_c('1')))))
+	test = re_cat(re_star(re_u(re_c('0'), re_c('1'))), re_cat(re_c('0'), re_cat(re_c('0'), re_cat(re_c('1'), re_star(re_u(re_c('0'), re_c('1')))))))
+	
+	print(test)
