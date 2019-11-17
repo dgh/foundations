@@ -311,6 +311,24 @@ n3_concat_n4 = nfa_n3.concat(nfa_n4)
 
 n3_kleene = nfa_n3.kleene()
 
+# abc
+r1 = re_cat(re_c('a'), re_cat(re_c('b'), re_c('c')))
+
+# binary number or nothing
+r2 = re_star(re_u(re_c('0'), re_c('1')))
+
+# 2-bit binary
+r3 = re_cat(re_u(re_c('0'), re_c('1')), re_u(re_c('0'), re_c('1')))
+
+# even length string
+r4 = re_star(re_cat(re_u(re_c('0'), re_c('1')), re_u(re_c('0'), re_c('1'))))
+
+# has at least one Char('1') 
+r5 = re_cat(re_star(re_u(re_c('0'), re_c('1'))), re_cat(re_c('1'), re_star(re_u(re_c('0'), re_c('1')))))
+
+# binary number containing String('001')
+r6 = re_cat(re_star(re_u(re_c('0'), re_c('1'))), re_cat(re_c('0'), re_cat(re_c('0'), re_cat(re_c('1'), re_star(re_u(re_c('0'), re_c('1')))))))
+
 if __name__ == '__main__':
 	# Test DFA that does not accept anything
 	test_cases = [([], False), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False), ('1111', False)]
@@ -472,11 +490,27 @@ if __name__ == '__main__':
 	test_cases = [('0', False), ('00000', True), ('0000000', True), ('00000000000', True), ('0000000000000', True), ('00000000000000000', True)]
 	run_dfa_tests(n3_kleene, test_cases)
 	
-	test = re_cat(re_c('a'), re_cat(re_c('b'), re_c('c')))
-	test = re_star(re_u('0', '1'))
-	test = re_cat(re_c('b'), re_cat(re_star(re_c('a')), re_star(re_c('h'))))
-	test = re_star(re_cat(re_u(re_c('0'), re_c('1')), re_u(re_c('0'), re_c('1'))))
-	test = re_cat(re_star(re_u(re_c('0'), re_c('1'))), re_cat(re_c('1'), re_star(re_u(re_c('0'), re_c('1')))))
-	test = re_cat(re_star(re_u(re_c('0'), re_c('1'))), re_cat(re_c('0'), re_cat(re_c('0'), re_cat(re_c('1'), re_star(re_u(re_c('0'), re_c('1')))))))
-	
-	print(test)
+
+	test_cases = [([], False), ('a', False), ('b', False), ('c', False), ('abc', True), ('aabc', False), ('abcc', False)]
+	# r1
+	print(r1)
+
+	test_cases = [([], True), ('0', True), ('1', True), ('01', True), ('10', True), ('11', True), ('100', True), ('011', True)]
+	# r2
+	print(r2)
+
+	test_cases = [([], False), ('1', False), ('0', False), ('00', True), ('01', True), ('10', True), ('11', True), ('000', False), ('001', False), ('110', False)]
+	# r3
+	print(r3)
+
+	test_cases = [([], True), ('1', False), ('0', False), ('00', True), ('01', True), ('10', True), ('11', True), ('000', False), ('001', False), ('0000', True), ('1010', True)]
+	# r4
+	print(r4)
+
+	test_cases = [([], False), ('1', True), ('0', False), ('00', False), ('01', True), ('10', True), ('11', True), ('000', False), ('001', True), ('010', True), ('0000', False), ('1010', True)]
+	# r5
+	print(r5)
+
+	test_cases = [([], False), ('1', False), ('0', False), ('00', False), ('000', False), ('001', True), ('010', False), ('0010', True), ('1001', True)]
+	# r6
+	print(r6)
