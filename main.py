@@ -3,6 +3,7 @@ from alphabet import Alphabet
 from string import String
 from nfa import NFA
 from dfa import DFA
+from regex import *
 
 import fa
 
@@ -99,4 +100,9 @@ trace_tree4 = '(A[(0/A[(0/A[(0/A[(0/A[NO])])])])])'
 trace_tree5 = '(A[(1/A[(0/A[NO])])(1/B[(0/C[NO])])])'
 trace_tree6 = '(A[(1/A[(0/A[(0/A[(1/A[(0/A[(0/A[NO])])])(1/B[(0/C[(0/D[YES])])])])])])(1/B[(0/C[(0/D[(1/E[(0/E[(0/E[NO])])])])])])])'
 
-print(nfa_fork.forking(String('0100')))
+print(f'Example of acceptable string from a◦b◦c: {regex_generate(fa.r1)}')
+print(f'Example of acceptable string from (0∪1)*: {regex_generate(fa.r2)}')
+print(f'Example of acceptable string from 0∪1◦0∪1: {regex_generate(fa.r3)}')
+print(f'Example of acceptable string from (0∪1◦0∪1)*: {regex_generate(fa.r4)}')
+print(f'Example of acceptable string from (0∪1)*◦1◦(0∪1)*: {regex_generate(fa.r5)}')
+print(f'Example of acceptable string from (0∪1)*◦0◦0◦1◦(0∪1)*: {regex_generate(fa.r6)}')
