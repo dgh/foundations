@@ -329,6 +329,12 @@ r5 = re_cat(re_star(re_u(re_c('0'), re_c('1'))), re_cat(re_c('1'), re_star(re_u(
 # binary number containing String('001')
 r6 = re_cat(re_star(re_u(re_c('0'), re_c('1'))), re_cat(re_c('0'), re_cat(re_c('0'), re_cat(re_c('1'), re_star(re_u(re_c('0'), re_c('1')))))))
 
+regex_nfa_test1 = regex_to_nfa(re_c('a'), 'a', binary)
+regex_nfa_test2 = regex_to_nfa(re_c('b'), 'b', binary)
+regex_nfa_test3 = regex_to_nfa(re_cat(re_c('a'), re_c('b')), 'ab', binary)
+regex_nfa_test4 = regex_to_nfa(re_u(re_cat(re_c('a'), re_c('b')), re_c('a')), 'ab∪a', binary)
+regex_nfa_test5 = regex_to_nfa(re_star(re_u(re_cat(re_c('a'), re_c('b')), re_c('a'))), '(ab∪a)*', binary)
+
 if __name__ == '__main__':
 	# Test DFA that does not accept anything
 	test_cases = [([], False), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False), ('1111', False)]

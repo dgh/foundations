@@ -1,12 +1,20 @@
 from char import Char
 from string import String
+from nfa import NFA
 
 def regex_generate(r):
 	return String(r.generate())
 
+def regex_to_nfa(r, name, a):
+	return NFA(name, a, 
+		*r.nfa())
+
 class regex():
 	def __repr__(self):
-		return ""
+		return ''
+
+	def generate(self):
+		return ''
 
 class re_null(regex):
 	def __init__(self):
@@ -28,6 +36,14 @@ class re_c(regex):
 	def generate(self):
 		return self.c
 
+	def nfa(self):
+		Q = set(['0', '1'])
+		q0 = '0'
+		δ = {'0': {self.c: ['1']}, '1': {}}
+		F = set(['1'])
+
+		return Q, q0, δ, F
+
 	def __repr__(self):
 		return self.c.__repr__()
 
@@ -38,6 +54,37 @@ class re_u(regex):
 
 	def generate(self):
 		return self.l.generate()
+
+	def nfa(self):
+		l_nfa = self.l.nfa()
+		r_nfa = self.r.nfa()
+
+		Q = l_nfa[0] # start with the states in lhs
+		q0 = str(len(l_nfa[0]) + len(r_nfa[0])) # we're adding a new node so reserve the q0 to be the last one
+		F = l_nfa[3] # start with the accepting in lhs
+
+		'''
+			Go through rhs δ and see if the state is already in Q
+			if it is then its conflicting and we have to update it with a new state
+			increment each character in rhs delta by the size of Q (lhs Q)
+		'''
+		δ = {}
+		for qi, transitions in r_nfa[2].items(): # create a new delta with the updates state names for the rhs
+			new_state = str(int(qi) + len(Q))
+			δ[new_state] = dict()
+			for c, states in transitions.items():
+				δ[new_state][c] = set([str(int(a) + len(Q)) for a in states])
+
+		δ.update(l_nfa[2]) # add the original lhs delta back
+		
+		δ[q0] = {'ε': [l_nfa[1], str(int(r_nfa[1]) + len(Q))]}
+
+		F.update([str(int(qi) + len(Q)) for qi in r_nfa[3]])
+
+		for qi in δ.keys(): # Make sure the Q has the update rhs states
+			Q.update(qi)
+
+		return Q, q0, δ, F
 
 	def __repr__(self):
 		return f'{self.l}∪{self.r}'
@@ -50,6 +97,39 @@ class re_cat(regex):
 	def generate(self):
 		return f'{self.l.generate()}{self.r.generate()}'
 
+	def nfa(self):
+		l_nfa = self.l.nfa()
+		r_nfa = self.r.nfa()
+
+		Q = l_nfa[0] # set first to be the states in lhs
+		q0 = l_nfa[1] # set to be the initial state in the lhs
+		
+		'''
+			Go through rhs δ and see if the state is already in Q
+			if it is then its conflicting and we have to update it with a new state
+			increment each character in rhs delta by the size of Q (lhs Q)
+		'''
+		δ = {}
+		for qi, transitions in r_nfa[2].items(): # create a new delta with the updates state names for the rhs
+			new_state = str(int(qi) + len(Q))
+			δ[new_state] = dict()
+			for c, states in transitions.items():
+				δ[new_state][c] = set([str(int(a) + len(Q)) for a in states])
+
+		δ.update(l_nfa[2]) # add the original lhs delta back
+
+		for qi in l_nfa[3]: # Make the link between the accepting states in lhs and eps trans them to the initial state in rhs
+			if not δ[qi].get('ε'):
+				δ[qi]['ε'] = []
+			δ[qi]['ε'].append(str(int(r_nfa[1]) + len(Q)))
+
+		F = set([str(int(qi) + len(Q)) for qi in r_nfa[3]])
+
+		for qi in δ.keys(): # Make sure the Q has the update rhs states
+			Q.update(qi)
+
+		return Q, q0, δ, F
+
 	def __repr__(self):
 		return f'{self.l}◦{self.r}'
 
@@ -60,5 +140,34 @@ class re_star(regex):
 	def generate(self):
 		return f'{self.r.generate()}'
 
+	def nfa(self):
+		r_nfa = self.r.nfa()
+
+		Q = r_nfa[0]
+		q0 = str(len(Q))
+		δ = r_nfa[2]
+		F = r_nfa[3]
+		
+		F.add(q0)
+		δ[q0] = {}
+
+		for qi in F:
+			if not δ[qi].get('ε'):
+				δ[qi]['ε'] = []
+			δ[qi]['ε'].append(r_nfa[1])
+
+		return Q, q0, δ, F
+
 	def __repr__(self):
 		return f'({self.r})*'
+
+
+r3 = re_cat(re_u(re_c('0'), re_c('1')), re_u(re_c('0'), re_c('1')))
+
+#print(re_cat(re_c('a'), re_c('b')).nfa())
+
+from pprint import pprint
+
+#pprint(re_cat(re_c('a'), re_c('b')).nfa()[2])
+
+pprint(re_star(re_u(re_cat(re_c('a'), re_c('b')), re_c('a'))).nfa())
