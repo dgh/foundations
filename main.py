@@ -106,3 +106,11 @@ print(f'Example of acceptable string from 0∪1◦0∪1: {regex_generate(fa.r3)}
 print(f'Example of acceptable string from (0∪1◦0∪1)*: {regex_generate(fa.r4)}')
 print(f'Example of acceptable string from (0∪1)*◦1◦(0∪1)*: {regex_generate(fa.r5)}')
 print(f'Example of acceptable string from (0∪1)*◦0◦0◦1◦(0∪1)*: {regex_generate(fa.r6)}')
+
+ab = Alphabet([Char('a'), Char('b')])
+regex_test = regex_to_nfa(re_star(re_cat(re_c('a'), re_c('b'))), 'regex_test', ab)
+nfatodfa = regex_test.toDFA('regex_test')
+
+stringg = String('ababab')
+print(regex_test.accepts(stringg))
+print(nfatodfa.accepts(stringg))

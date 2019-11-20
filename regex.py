@@ -6,8 +6,7 @@ def regex_generate(r):
 	return String(r.generate())
 
 def regex_to_nfa(r, name, a):
-	return NFA(name, a, 
-		*r.nfa())
+	return NFA(name, a, *r.nfa())
 
 class regex():
 	def __repr__(self):
@@ -160,14 +159,3 @@ class re_star(regex):
 
 	def __repr__(self):
 		return f'({self.r})*'
-
-
-r3 = re_cat(re_u(re_c('0'), re_c('1')), re_u(re_c('0'), re_c('1')))
-
-#print(re_cat(re_c('a'), re_c('b')).nfa())
-
-from pprint import pprint
-
-#pprint(re_cat(re_c('a'), re_c('b')).nfa()[2])
-
-pprint(re_star(re_u(re_cat(re_c('a'), re_c('b')), re_c('a'))).nfa())

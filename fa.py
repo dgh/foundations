@@ -335,6 +335,11 @@ regex_nfa_test3 = regex_to_nfa(re_cat(re_c('a'), re_c('b')), 'ab', binary)
 regex_nfa_test4 = regex_to_nfa(re_u(re_cat(re_c('a'), re_c('b')), re_c('a')), 'ab∪a', binary)
 regex_nfa_test5 = regex_to_nfa(re_star(re_u(re_cat(re_c('a'), re_c('b')), re_c('a'))), '(ab∪a)*', binary)
 
+ab = Alphabet([Char('a'), Char('b')])
+re_star_cat_ab = re_star(re_cat(re_c('a'), re_c('b')))
+nfa_star_cat_ab = regex_to_nfa(re_star_cat_ab, 'nfa_star_cat_ab', ab)
+dfa_star_cat_ab = nfa_star_cat_ab.toDFA('dfa_star_cat_ab')
+
 if __name__ == '__main__':
 	# Test DFA that does not accept anything
 	test_cases = [([], False), ('1', False), ('00', False), ('01', False), ('10', False), ('11', False), ('000', False), ('001', False), ('010', False), ('011', False), ('0000', False), ('1111', False)]
@@ -496,7 +501,6 @@ if __name__ == '__main__':
 	test_cases = [('0', False), ('00000', True), ('0000000', True), ('00000000000', True), ('0000000000000', True), ('00000000000000000', True)]
 	run_dfa_tests(n3_kleene, test_cases)
 	
-
 	test_cases = [([], False), ('a', False), ('b', False), ('c', False), ('abc', True), ('aabc', False), ('abcc', False)]
 	# r1
 	print(r1)
@@ -520,3 +524,11 @@ if __name__ == '__main__':
 	test_cases = [([], False), ('1', False), ('0', False), ('00', False), ('000', False), ('001', True), ('010', False), ('0010', True), ('1001', True)]
 	# r6
 	print(r6)
+
+	# NFA of regex (ab)*
+	test_cases = [([], True), ('a', False), ('b', False), ('ab', True), ('ba', False), ('aba', False), ('baa', False), ('abab', True)]
+	run_dfa_tests(nfa_star_cat_ab, test_cases) # Since both NFA and DFA have the same return an parameters in their accepts function I just reused the run_dfa_tests function to test
+
+	# DFA of regex (ab)*
+	test_cases = [([], True), ('a', False), ('b', False), ('ab', True), ('ba', False), ('aba', False), ('baa', False), ('abab', True)]
+	run_dfa_tests(dfa_star_cat_ab, test_cases)

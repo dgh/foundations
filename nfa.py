@@ -130,9 +130,9 @@ class NFA():
 
 	def toDFA(self, name):
 		Σ = self.Σ.copy()
-		qi = frozenset(self.epsilon_closure(self.q0))
-		stack = [qi]
-		Q = set([qi])
+		q0 = frozenset(self.epsilon_closure(self.q0))
+		stack = [q0]
+		Q = set([q0])
 		δ = {}
 		F = set()
 
@@ -151,17 +151,19 @@ class NFA():
 					if self.δ[q].get(c):
 						new_states.update(self.δ[q][c])
 	
-				new_states = frozenset(set_closure(new_states))
-				δ[x][c] = new_states
+				if new_states:
+					new_states = frozenset(set_closure(new_states))
+					δ[x][c] = new_states
 
-				if new_states not in Q:
-					Q.add(new_states)
-					stack.append(new_states)
+					if new_states not in Q:
+						Q.add(new_states)
+						stack.append(new_states)
 
-				if new_states & self.F:
-					F.add(new_states)
+		for q in Q:
+			if q & self.F:
+				F.add(q)
 
-		return DFA(name, Σ, Q, qi, δ, F)
+		return DFA(name, Σ, Q, q0, δ, F)
 
 	def forking(self, s):
 		s = list(s)

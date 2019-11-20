@@ -14,6 +14,7 @@ class DFA():
 		qi = self.q0
 		for c in s:
 			if c.is_empty(): continue
+			if not self.δ[qi].get(c): return False
 			qi = self.δ[qi][c]
 
 		return qi in self.F
