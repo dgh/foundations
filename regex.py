@@ -72,7 +72,7 @@ class re_u(regex):
 			new_state = str(int(qi) + len(Q))
 			δ[new_state] = dict()
 			for c, states in transitions.items():
-				δ[new_state][c] = set([str(int(a) + len(Q)) for a in states])
+				δ[new_state][c] = [str(int(a) + len(Q)) for a in states]
 
 		δ.update(l_nfa[2]) # add the original lhs delta back
 		
@@ -113,7 +113,7 @@ class re_cat(regex):
 			new_state = str(int(qi) + len(Q))
 			δ[new_state] = dict()
 			for c, states in transitions.items():
-				δ[new_state][c] = set([str(int(a) + len(Q)) for a in states])
+				δ[new_state][c] = [str(int(a) + len(Q)) for a in states]
 
 		δ.update(l_nfa[2]) # add the original lhs delta back
 
@@ -147,6 +147,7 @@ class re_star(regex):
 		δ = r_nfa[2]
 		F = r_nfa[3]
 		
+		Q.add(q0)
 		F.add(q0)
 		δ[q0] = {}
 

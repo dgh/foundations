@@ -10,6 +10,15 @@ class DFA():
 		self.δ = δ
 		self.F = F
 
+		if 'Hell' not in self.Q:
+			self.Q.add('Hell')
+			self.δ.update({'Hell':{}})
+
+		for qi, v in self.δ.items():
+			for c in self.Σ:
+				if c not in v:
+					v.update({c: 'Hell'})
+
 	def accepts(self, s):
 		qi = self.q0
 		for c in s:

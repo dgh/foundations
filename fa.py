@@ -66,7 +66,22 @@ def run_nfa_oracle_test(n1, tests):
 		if test_nfa_oracle(n1, s, case[0], case[1]):
 			passed += 1
 	print(f'{passed}/{len(tests)} oracle tests PASSED for {n1.name}!')
-	return passed	
+	return passed
+
+def run_re_dfa_equality_test(r, a, tests):
+	def test_re_dfa_equality(r, a, d, expected):
+		n = regex_to_nfa(r, 'regex', a)
+		if (n.toDFA(n.name) == d) != expected:
+			print(f'Test if regex_test == {d.name} FAILED, expected {expected} but got {not expected}!')
+			return False
+		return True
+
+	passed = 0
+	for case in tests:
+		if test_re_dfa_equality(r, a, case[0], case[1]):
+			passed += 1
+	print(f'{passed}/{len(tests)} regex and DFA equality tests PASSED for regex and {case[0].name}!')
+	return passed
 
 binary = Alphabet([Char('0'), Char('1')])
 alpha = Alphabet([Char(c) for c in 'adejyv#"'])
@@ -339,6 +354,39 @@ ab = Alphabet([Char('a'), Char('b')])
 re_star_cat_ab = re_star(re_cat(re_c('a'), re_c('b')))
 nfa_star_cat_ab = regex_to_nfa(re_star_cat_ab, 'nfa_star_cat_ab', ab)
 dfa_star_cat_ab = nfa_star_cat_ab.toDFA('dfa_star_cat_ab')
+dfa_star_cat_ab_manual = DFA('star_cat_ab', ab,
+							{'qA', 'qB', 'qC'}, 'qA',
+							{
+								'qA': {Char('a'): 'qB'},
+								'qB': {Char('b'): 'qC'},
+								'qC': {Char('a'): 'qB'}
+							},
+							{'qA', 'qC'})
+							
+re_star_cat_union_ab_b = re_star(re_cat(re_u(re_c('a'), re_c('b')), re_c('b')))
+nfa_star_cat_union_ab_b = regex_to_nfa(re_star_cat_union_ab_b, 'nfa_star_cat_union_ab_b', ab)
+dfa_star_cat_union_ab_b = nfa_star_cat_union_ab_b.toDFA('dfa_star_cat_union_ab_b')
+dfa_star_cat_union_ab_b_manual = DFA('star_cat_union_ab_b', ab,
+									{'qA', 'qB', 'qC', 'qD'}, 'qA',
+									{
+										'qA': {Char('a'): 'qB', Char('b'): 'qC'},
+										'qB': {Char('b'): 'qD'},
+										'qC': {Char('b'): 'qD'},
+										'qD': {Char('a'): 'qB', Char('b'): 'qB'}
+									},
+									{'qA', 'qD'})
+
+re_star_u_star_a_star_b = re_star(re_u(re_star(re_c('a')), re_star(re_c('b'))))
+nfa_star_u_star_a_star_b = regex_to_nfa(re_star_u_star_a_star_b, 'nfa_star_u_star_a_star_b', ab)
+dfa_star_u_star_a_star_b = nfa_star_u_star_a_star_b.toDFA('dfa_star_u_star_a_star_b')
+dfa_star_u_star_a_star_b_manual = DFA('dfa_star_u_star_a_star_b_manual', ab,
+									{'qA', 'qB', 'qC'}, 'qA',
+									{
+										'qA': {Char('a'): 'qB', Char('b'): 'qC'},
+										'qB': {Char('a'): 'qB', Char('b'): 'qC'},
+										'qC': {Char('a'): 'qB', Char('b'): 'qC'},
+									},
+									{'qA', 'qB', 'qC'})
 
 if __name__ == '__main__':
 	# Test DFA that does not accept anything
@@ -531,4 +579,3 @@ if __name__ == '__main__':
 
 	# DFA of regex (ab)*
 	test_cases = [([], True), ('a', False), ('b', False), ('ab', True), ('ba', False), ('aba', False), ('baa', False), ('abab', True)]
-	run_dfa_tests(dfa_star_cat_ab, test_cases)

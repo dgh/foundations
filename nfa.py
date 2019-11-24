@@ -129,7 +129,7 @@ class NFA():
 		return NFA(name, Σ, Q, q0, δ, F)
 
 	def toDFA(self, name):
-		Σ = self.Σ.copy()
+		Σ = self.Σ
 		q0 = frozenset(self.epsilon_closure(self.q0))
 		stack = [q0]
 		Q = set([q0])
