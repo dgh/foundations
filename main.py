@@ -106,3 +106,16 @@ print(f'Example of acceptable string from 0∪1◦0∪1: {regex_generate(fa.r3)}
 print(f'Example of acceptable string from (0∪1◦0∪1)*: {regex_generate(fa.r4)}')
 print(f'Example of acceptable string from (0∪1)*◦1◦(0∪1)*: {regex_generate(fa.r5)}')
 print(f'Example of acceptable string from (0∪1)*◦0◦0◦1◦(0∪1)*: {regex_generate(fa.r6)}')
+
+
+r = re_star(re_null())
+r.optimize()
+print(type(r))
+
+r = re_cat(re_star(re_c('1')), re_null())
+r.optimize()
+print(type(r))
+
+h = re_cat(re_u(re_c('0'), re_eps()), re_star(re_c('1')))
+hnfa = regex_to_nfa(h, 'hnfa', binary)
+hdfa = hnfa.toDFA('hdfa')

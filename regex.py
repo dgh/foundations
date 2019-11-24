@@ -8,6 +8,9 @@ def regex_generate(r):
 def regex_to_nfa(r, name, a):
 	return NFA(name, a, *r.nfa())
 
+def regex_optimize(r):
+	return r.optimize()
+
 class regex():
 	def __repr__(self):
 		return ''
@@ -22,6 +25,14 @@ class re_null(regex):
 class re_eps(regex):
 	def __init__(self):
 		pass
+
+	def nfa(self):
+		Q = set(['0', '1'])
+		q0 = '0'
+		δ = {'0': {'ε': ['1']}, '1': {}}
+		F = set(['1'])
+
+		return Q, q0, δ, F
 
 	def __repr__(self):
 		return 'ε'
@@ -129,6 +140,12 @@ class re_cat(regex):
 
 		return Q, q0, δ, F
 
+	def optimize(self):
+		if isinstance(self.l, re_null):
+			self.__class__ = re_null
+		elif isinstance(self.r, re_null):
+			self.__class__ = re_null
+
 	def __repr__(self):
 		return f'{self.l}◦{self.r}'
 
@@ -157,6 +174,10 @@ class re_star(regex):
 			δ[qi]['ε'].append(r_nfa[1])
 
 		return Q, q0, δ, F
+
+	def optimize(self):
+		if isinstance(self.r, re_null):
+			self.__class__ = re_eps
 
 	def __repr__(self):
 		return f'({self.r})*'
