@@ -579,3 +579,16 @@ if __name__ == '__main__':
 
 	# DFA of regex (ab)*
 	test_cases = [([], True), ('a', False), ('b', False), ('ab', True), ('ba', False), ('aba', False), ('baa', False), ('abab', True)]
+	run_dfa_tests(dfa_star_cat_ab, test_cases)
+
+	# (ab)* Regular Expression => NFA => DFA 
+	test_cases = [(dfa_star_cat_ab, True), (dfa_star_cat_ab_manual, True)]
+	run_re_dfa_equality_test(re_star_cat_ab, ab, test_cases)
+
+	# ((a∪b)b)* Regular Expression => NFA => DFA 
+	test_cases = [(dfa_star_cat_union_ab_b, True), (dfa_star_cat_union_ab_b_manual, True)]
+	run_re_dfa_equality_test(re_star_cat_union_ab_b, ab, test_cases)
+
+	# ((a*)∪(b*))* Regular Expression => NFA => DFA 
+	test_cases = [(dfa_star_u_star_a_star_b, True), (dfa_star_u_star_a_star_b_manual, True)]
+	run_re_dfa_equality_test(re_star_u_star_a_star_b, ab, test_cases)
