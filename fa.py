@@ -71,7 +71,7 @@ def run_nfa_oracle_test(n1, tests):
 def run_re_dfa_equality_test(r, a, tests):
 	def test_re_dfa_equality(r, a, d, expected):
 		n = regex_to_nfa(r, 'regex', a)
-		if (n.toDFA(n.name) == d) != expected:
+		if (n.to_dfa(n.name) == d) != expected:
 			print(f'Test if regex_test == {d.name} FAILED, expected {expected} but got {not expected}!')
 			return False
 		return True
@@ -353,7 +353,7 @@ regex_nfa_test5 = regex_to_nfa(re_star(re_u(re_cat(re_c('a'), re_c('b')), re_c('
 ab = Alphabet([Char('a'), Char('b')])
 re_star_cat_ab = re_star(re_cat(re_c('a'), re_c('b')))
 nfa_star_cat_ab = regex_to_nfa(re_star_cat_ab, 'nfa_star_cat_ab', ab)
-dfa_star_cat_ab = nfa_star_cat_ab.toDFA('dfa_star_cat_ab')
+dfa_star_cat_ab = nfa_star_cat_ab.to_dfa('dfa_star_cat_ab')
 dfa_star_cat_ab_manual = DFA('star_cat_ab', ab,
 							{'qA', 'qB', 'qC'}, 'qA',
 							{
@@ -365,7 +365,7 @@ dfa_star_cat_ab_manual = DFA('star_cat_ab', ab,
 							
 re_star_cat_union_ab_b = re_star(re_cat(re_u(re_c('a'), re_c('b')), re_c('b')))
 nfa_star_cat_union_ab_b = regex_to_nfa(re_star_cat_union_ab_b, 'nfa_star_cat_union_ab_b', ab)
-dfa_star_cat_union_ab_b = nfa_star_cat_union_ab_b.toDFA('dfa_star_cat_union_ab_b')
+dfa_star_cat_union_ab_b = nfa_star_cat_union_ab_b.to_dfa('dfa_star_cat_union_ab_b')
 dfa_star_cat_union_ab_b_manual = DFA('star_cat_union_ab_b', ab,
 									{'qA', 'qB', 'qC', 'qD'}, 'qA',
 									{
@@ -378,7 +378,7 @@ dfa_star_cat_union_ab_b_manual = DFA('star_cat_union_ab_b', ab,
 
 re_star_u_star_a_star_b = re_star(re_u(re_star(re_c('a')), re_star(re_c('b'))))
 nfa_star_u_star_a_star_b = regex_to_nfa(re_star_u_star_a_star_b, 'nfa_star_u_star_a_star_b', ab)
-dfa_star_u_star_a_star_b = nfa_star_u_star_a_star_b.toDFA('dfa_star_u_star_a_star_b')
+dfa_star_u_star_a_star_b = nfa_star_u_star_a_star_b.to_dfa('dfa_star_u_star_a_star_b')
 dfa_star_u_star_a_star_b_manual = DFA('dfa_star_u_star_a_star_b_manual', ab,
 									{'qA', 'qB', 'qC'}, 'qA',
 									{

@@ -13,7 +13,7 @@ class NFA():
 		self.δ = δ
 		self.F = F
 
-	def fromDFA(name, d):
+	def from_dfa(name, d):
 		δ = dict()
 		for state in d.δ:
 			δ[state] = dict()
@@ -128,7 +128,7 @@ class NFA():
 
 		return NFA(name, Σ, Q, q0, δ, F)
 
-	def toDFA(self, name):
+	def to_dfa(self, name):
 		Σ = self.Σ
 		q0 = frozenset(self.epsilon_closure(self.q0))
 		stack = [q0]

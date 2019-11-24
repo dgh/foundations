@@ -4,6 +4,7 @@ from string import String
 from nfa import NFA
 from dfa import DFA
 from regex import *
+from gnfa import GNFA
 
 import fa
 
@@ -75,7 +76,7 @@ dfa_manual = DFA('fsa', binary,
 					'C': {Char('0'): 'B', Char('1'): 'C'},
 				}, {'C'})
 
-dfa_from_nfa = nfa_manual.toDFA('dfa_from_nfa')
+dfa_from_nfa = nfa_manual.to_dfa('dfa_from_nfa')
 
 # for x in range(1, 16):
 # 	s = binary.generate_nth_string(x)
@@ -118,4 +119,33 @@ print(type(r))
 
 h = re_cat(re_u(re_c('0'), re_eps()), re_star(re_c('1')))
 hnfa = regex_to_nfa(h, 'hnfa', binary)
-hdfa = hnfa.toDFA('hdfa')
+hdfa = hnfa.to_dfa('hdfa')
+
+dff = DFA('test', fa.binary,
+
+{'qA', 'qB', 'qC'}, 'qA',
+{
+	'qA': {Char('0'): 'qB', Char('1'): 'qA'},
+	'qB': {Char('0'): 'qB', Char('1'): 'qC'},
+	'qC': {Char('0'): 'qC', Char('1'): 'qC'},
+}, {'qC'})
+from pprint import pprint
+
+g = GNFA.from_dfa('tests', dff)
+
+l = ['ε']
+
+def fh(i):
+	if i < len(l):
+		if not fh(i + 1):
+			if l[i] == 'ε':
+				return re_eps()
+			return re_c(l[i])
+		if l[i] == 'ε':
+			return re_u(re_eps(), fh(i + 1))
+		return re_u(re_c(l[i]), fh(i + 1))
+	return 0#re_eps()
+
+r = fh(0)
+
+print(type(r))

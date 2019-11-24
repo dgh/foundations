@@ -18,9 +18,15 @@ class regex():
 	def generate(self):
 		return ''
 
+	def optimize(self):
+		return self
+
 class re_null(regex):
 	def __init__(self):
 		pass
+
+	def __repr__(self):
+		return '∅'
 
 class re_eps(regex):
 	def __init__(self):
@@ -44,7 +50,7 @@ class re_c(regex):
 		self.c = c
 
 	def generate(self):
-		return self.c
+		return f'{self.c}'
 
 	def nfa(self):
 		Q = set(['0', '1'])
@@ -96,6 +102,10 @@ class re_u(regex):
 
 		return Q, q0, δ, F
 
+	def optimize(self):
+		if isinstance(self.l, re_eps) and isinstance(self.r, re_eps):
+			self.__class__ = self.l.__class__
+
 	def __repr__(self):
 		return f'{self.l}∪{self.r}'
 
@@ -145,6 +155,10 @@ class re_cat(regex):
 			self.__class__ = re_null
 		elif isinstance(self.r, re_null):
 			self.__class__ = re_null
+		elif isinstance(self.l, re_eps):
+			self.__class__ = self.r.__class__
+		elif isinstance(self.r, re_eps):
+			self.__class__ = self.l.__class__
 
 	def __repr__(self):
 		return f'{self.l}◦{self.r}'
