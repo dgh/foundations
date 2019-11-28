@@ -101,25 +101,25 @@ trace_tree4 = '(A[(0/A[(0/A[(0/A[(0/A[NO])])])])])'
 trace_tree5 = '(A[(1/A[(0/A[NO])])(1/B[(0/C[NO])])])'
 trace_tree6 = '(A[(1/A[(0/A[(0/A[(1/A[(0/A[(0/A[NO])])])(1/B[(0/C[(0/D[YES])])])])])])(1/B[(0/C[(0/D[(1/E[(0/E[(0/E[NO])])])])])])])'
 
-print(f'Example of acceptable string from a◦b◦c: {regex_generate(fa.r1)}')
-print(f'Example of acceptable string from (0∪1)*: {regex_generate(fa.r2)}')
-print(f'Example of acceptable string from 0∪1◦0∪1: {regex_generate(fa.r3)}')
-print(f'Example of acceptable string from (0∪1◦0∪1)*: {regex_generate(fa.r4)}')
-print(f'Example of acceptable string from (0∪1)*◦1◦(0∪1)*: {regex_generate(fa.r5)}')
-print(f'Example of acceptable string from (0∪1)*◦0◦0◦1◦(0∪1)*: {regex_generate(fa.r6)}')
+# print(f'Example of acceptable string from a◦b◦c: {regex_generate(fa.r1)}')
+# print(f'Example of acceptable string from (0∪1)*: {regex_generate(fa.r2)}')
+# print(f'Example of acceptable string from 0∪1◦0∪1: {regex_generate(fa.r3)}')
+# print(f'Example of acceptable string from (0∪1◦0∪1)*: {regex_generate(fa.r4)}')
+# print(f'Example of acceptable string from (0∪1)*◦1◦(0∪1)*: {regex_generate(fa.r5)}')
+# print(f'Example of acceptable string from (0∪1)*◦0◦0◦1◦(0∪1)*: {regex_generate(fa.r6)}')
 
 
-r = re_star(re_null())
-r.optimize()
-print(type(r))
+# r = re_star(re_null())
+# r.optimize()
+# print(type(r))
 
-r = re_cat(re_star(re_c('1')), re_null())
-r.optimize()
-print(type(r))
+# r = re_cat(re_star(re_c('1')), re_null())
+# r.optimize()
+# print(type(r))
 
-h = re_cat(re_u(re_c('0'), re_eps()), re_star(re_c('1')))
-hnfa = regex_to_nfa(h, 'hnfa', binary)
-hdfa = hnfa.to_dfa('hdfa')
+# h = re_cat(re_u(re_c('0'), re_eps()), re_star(re_c('1')))
+# hnfa = regex_to_nfa(h, 'hnfa', binary)
+# hdfa = hnfa.to_dfa('hdfa')
 
 dff = DFA('test', fa.binary,
 
@@ -133,19 +133,19 @@ from pprint import pprint
 
 g = GNFA.from_dfa('tests', dff)
 
-l = ['ε']
+# l = ['ε']
 
-def fh(i):
-	if i < len(l):
-		if not fh(i + 1):
-			if l[i] == 'ε':
-				return re_eps()
-			return re_c(l[i])
-		if l[i] == 'ε':
-			return re_u(re_eps(), fh(i + 1))
-		return re_u(re_c(l[i]), fh(i + 1))
-	return 0#re_eps()
+# def fh(i):
+# 	if i < len(qi):
+# 		if not fh(i + 1):
+# 			if qi[i] == 'ε':
+# 				return re_eps()
+# 			return re_c(qi[i])
+# 		if qi[i] == 'ε':
+# 			return re_u(re_eps(), fh(i + 1))
+# 		return re_u(re_c(qi[i]), fh(i + 1))
+# 	return 0
+	
+# r = fh(0)
 
-r = fh(0)
-
-print(type(r))
+# print(type(r))
