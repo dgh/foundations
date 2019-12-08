@@ -41,7 +41,7 @@ class re_eps(regex):
 		return Q, q0, δ, F
 
 	def __repr__(self):
-		return 'ε'
+		return 're_eps<ε>'
 
 class re_c(regex):
 	def __init__(self, c):
@@ -55,13 +55,14 @@ class re_c(regex):
 	def nfa(self):
 		Q = set(['0', '1'])
 		q0 = '0'
+		#print(type(self.c))
 		δ = {'0': {self.c: ['1']}, '1': {}}
 		F = set(['1'])
 
 		return Q, q0, δ, F
 
 	def __repr__(self):
-		return self.c.__repr__()
+		return f're_c<{self.c.__repr__()}>'
 
 class re_u(regex):
 	def __init__(self, lc, rc):
@@ -103,8 +104,14 @@ class re_u(regex):
 		return Q, q0, δ, F
 
 	def optimize(self):
-		if isinstance(self.l, re_eps) and isinstance(self.r, re_eps):
-			self.__class__ = self.l.__class__
+		# if isinstance(self.l, re_eps) and isinstance(self.r, re_eps):
+		# 	self.__class__ = self.l.__class__
+		if type(self.l) == re_null:
+			return self.r.optimize()
+		elif type(self.r) == re_null:
+			return self.l.optimize()
+
+		return re_u(self.l.optimize(), self.r.optimize())
 
 	def __repr__(self):
 		return f'{self.l}∪{self.r}'
@@ -151,17 +158,22 @@ class re_cat(regex):
 		return Q, q0, δ, F
 
 	def optimize(self):
-		if isinstance(self.l, re_null):
-			self.__class__ = re_null
-		elif isinstance(self.r, re_null):
-			self.__class__ = re_null
-		elif isinstance(self.l, re_eps):
-			self.__class__ = self.r.__class__
-		elif isinstance(self.r, re_eps):
-			self.__class__ = self.l.__class__
+		# if isinstance(self.l, re_null):
+		# 	#self.__class__ = re_null
+		# 	return re_null()
+		# elif isinstance(self.r, re_null):
+		# 	#self.__class__ = re_null
+		# 	return re_null()
+		if type(self.l) == re_eps:
+			return self.r.optimize()
+		elif type(self.r) == re_eps:
+			return self.l.optimize()
+
+		return re_cat(self.l.optimize(), self.r.optimize())
+
 
 	def __repr__(self):
-		return f'{self.l}◦{self.r}'
+		return f'[({self.l})◦({self.r})]'
 
 class re_star(regex):
 	def __init__(self, r):
@@ -191,7 +203,8 @@ class re_star(regex):
 
 	def optimize(self):
 		if isinstance(self.r, re_null):
-			self.__class__ = re_eps
+			return re_eps()
+		return re_star(self.r.optimize())
 
 	def __repr__(self):
 		return f'({self.r})*'

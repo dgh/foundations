@@ -3,6 +3,72 @@ from regex import *
 from copy import deepcopy
 from pprint import pprint
 
+def next_states(dfa, s):
+	next_states = {}
+	for x, next_s in dfa.δ[s].items():
+		if next_s not in next_states:
+			next_states[next_s] = []
+		next_states[next_s].append(x)
+	return next_states
+
+def sequence(literals):
+	def gh(r):
+		if isinstance(r, regex):
+			return r
+		#print('asd', type(r))
+		return re_c(r)
+
+	if len(literals) == 1:
+		#print('asdasd', literals[0], type(literals[0]))
+		if literals[0] == 'ε':
+			return re_eps()
+		gdsa = gh(literals[0])
+		print(1, type(gdsa))
+		return gdsa
+
+
+	def fh(i):
+		if i < len(literals):
+			if not fh(i + 1):
+				if type(literals[i]) == re_eps:
+					return re_eps()
+				return gh(literals[i])
+			if type(literals[i]) == re_eps:
+				return re_u(re_eps(), fh(i + 1))
+			return re_u(gh(literals[i]), fh(i + 1))
+
+	r = fh(0)
+	return r
+
+def alternation(literals):
+	def gh(r):
+		if isinstance(r, regex):
+
+			return r
+		#print('asd', type(r))
+		print('asddd', r)
+		return re_c(r)
+
+	if len(literals) == 1:
+		#print('asdasd', literals[0], type(literals[0]))
+		if literals[0] == 'ε':
+			return re_eps()
+		return gh(literals[0])
+
+
+	def fh(i):
+		if i < len(literals):
+			if not fh(i + 1):
+				if type(literals[i]) == re_eps:
+					return re_eps()
+				return gh(literals[i])
+			if type(literals[i]) == re_eps:
+				return re_cat(re_eps(), fh(i + 1))
+			return re_cat(gh(literals[i]), fh(i + 1))
+
+	r = fh(0)
+	return r
+
 class GNFA():
 	def __init__(self, name, Q, q0, δ, F):
 		self.name = name
@@ -86,7 +152,100 @@ class GNFA():
 
 	# 	pprint(newdelt)
 	# 	return None
-	def from_dfa(self, dfa):
+	@classmethod
+	def from_dfa(cls, dfa):
+		delta = {}
+
+				# remove un-needed states/ transitions like the hell state
+		if 'Hell' in dfa.δ:
+			dfa.δ.pop('Hell')
+		for qi, t in dfa.δ.items():
+			for c, tr in list(t.items()):
+				if tr == 'Hell':
+					t.pop(c)
+
+		for s in dfa.δ:
+			s_delta = {}
+			for next_s, xs in next_states(dfa, s).items():
+				literals = [re_c(x) for x in xs]
+				#print('alternation:', alternation(literals))
+				s_delta[next_s] = alternation(literals)
+			delta[s] = s_delta
+		init_delta = {}
+		init_delta[dfa.q0] = re_eps()
+		delta['g0'] = init_delta
+		#delta['g1'] = {}
+		for accept_state in dfa.F:
+			delta[accept_state]['g1'] = re_eps()
+
+		pprint(delta)
+
+		return GNFA(dfa.name, dfa.Q, 'g0', delta, {'g1'})
+
+	def arbitrary_state(self):
+		for s in self.δ.keys():
+			if s != self.q0:
+				return s
+		return None
+
+	def incoming_edges(self, next_s):
+		edges = []
+		for s, s_delta in self.δ.items():
+			if next_s in s_delta:
+				edges.append((s, s_delta[next_s]))
+		return edges
+
+	def outgoing_edges(self, s):
+		edges = []
+		for next_s, r_out in self.δ[s].items():
+			edges.append((next_s, r_out))
+		return edges
+
+	def delete_state(self, s):
+		del self.δ[s]
+		for s_delta in self.δ.values():
+			if s in s_delta:
+				del s_delta[s]
+
+	def loop_regex(self, s):
+		return self.transition(s, s)
+
+	def transition(self, s, next_s):
+		return self.δ[s].get(next_s, re_eps())
+
+	def rip_state(self, q_rip):
+		in_list = self.incoming_edges(q_rip)
+		out_list = self.outgoing_edges(q_rip)
+		R_rip = re_star(self.loop_regex(q_rip))
+
+		for q_in, r_in in in_list:
+			for q_out, r_out in out_list:
+				r_rip_replacement = sequence([r_in, R_rip, r_out])
+				old_in_out = self.transition(q_in, q_out)
+				self.δ[q_in][q_out] = alternation([old_in_out, r_rip_replacement])
+
+		self.delete_state(q_rip)
+
+	def rip_all(self):
+		q_rip = self.arbitrary_state()
+		
+		while q_rip is not None:
+			#print(q_rip)
+			self.rip_state(q_rip)
+			q_rip = self.arbitrary_state()
+
+
+	@classmethod
+	def dfa_re(cls, dfa):
+		m = cls.from_dfa(dfa)
+		m.rip_all()
+#		print(m)
+		r = m.transition(m.q0, 'g1')
+#		print(2, r)
+		return r
+
+
+	def from_dfa_old(self, dfa):
 		nfa = NFA.from_dfa(dfa.name, dfa)
 		name = nfa.name
 		Q = nfa.Q.copy()
@@ -142,9 +301,9 @@ class GNFA():
 
 		δ = nδ
 
-		# for qi, t in δ.items():
-		# 	for c, tr in t.items():
-		# 		print(qi, t)
+		for qi, t in δ.items():
+			for c, tr in t.items():
+				print(qi, ':', c, '\t=>', tr)
 		return GNFA(name, Q, q0, δ, F)
 
 {'qA', 'qB', 'qC'}, 'qA'

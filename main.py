@@ -125,13 +125,20 @@ dff = DFA('test', fa.binary,
 
 {'qA', 'qB', 'qC'}, 'qA',
 {
-	'qA': {Char('0'): 'qB', Char('1'): 'qA'},
+	'qA': {Char('0'): 'qB', Char('1'): 'qC'},
 	'qB': {Char('0'): 'qB', Char('1'): 'qC'},
-	'qC': {Char('0'): 'qC', Char('1'): 'qC'},
+	'qC': {},
 }, {'qC'})
 from pprint import pprint
 
-g = GNFA.from_dfa('tests', dff)
+g = GNFA.dfa_re(dff)
+
+n = regex_to_nfa(g, 'nfa_test', fa.binary)
+print('asd', n.δ, n.F)
+print(g)
+#print(n.to_dfa('name').accepts('0001'))
+
+print(n.accepts(String('00001')))
 
 # l = ['ε']
 
