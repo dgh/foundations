@@ -104,8 +104,6 @@ class re_u(regex):
 		return Q, q0, δ, F
 
 	def optimize(self):
-		# if isinstance(self.l, re_eps) and isinstance(self.r, re_eps):
-		# 	self.__class__ = self.l.__class__
 		if type(self.l) == re_null:
 			return self.r.optimize()
 		elif type(self.r) == re_null:
@@ -114,7 +112,7 @@ class re_u(regex):
 		return re_u(self.l.optimize(), self.r.optimize())
 
 	def __repr__(self):
-		return f'{self.l}∪{self.r}'
+		return f're_u({self.l}∪{self.r})'
 
 class re_cat(regex):
 	def __init__(self, lc, rc):
@@ -158,19 +156,11 @@ class re_cat(regex):
 		return Q, q0, δ, F
 
 	def optimize(self):
-		# if isinstance(self.l, re_null):
-		# 	#self.__class__ = re_null
-		# 	return re_null()
-		# elif isinstance(self.r, re_null):
-		# 	#self.__class__ = re_null
-		# 	return re_null()
 		if type(self.l) == re_eps:
 			return self.r.optimize()
 		elif type(self.r) == re_eps:
 			return self.l.optimize()
-
 		return re_cat(self.l.optimize(), self.r.optimize())
-
 
 	def __repr__(self):
 		return f'[({self.l})◦({self.r})]'

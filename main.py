@@ -129,30 +129,16 @@ dff = DFA('test', fa.binary,
 	'qB': {Char('0'): 'qB', Char('1'): 'qC'},
 	'qC': {},
 }, {'qC'})
+
 from pprint import pprint
 
-g = GNFA.dfa_re(dff)
+# g = GNFA.from_dfa(dff)
 
-n = regex_to_nfa(g, 'nfa_test', fa.binary)
-print('asd', n.δ, n.F)
-print(g)
-#print(n.to_dfa('name').accepts('0001'))
-
-print(n.accepts(String('00001')))
-
-# l = ['ε']
-
-# def fh(i):
-# 	if i < len(qi):
-# 		if not fh(i + 1):
-# 			if qi[i] == 'ε':
-# 				return re_eps()
-# 			return re_c(qi[i])
-# 		if qi[i] == 'ε':
-# 			return re_u(re_eps(), fh(i + 1))
-# 		return re_u(re_c(qi[i]), fh(i + 1))
-# 	return 0
-	
-# r = fh(0)
-
-# print(type(r))
+r = re_u(re_null(), re_c('A'))
+print(r.optimize())
+r = re_u(re_cat(re_eps(), re_c('A')), re_null())
+print(r.optimize())
+r = re_cat(re_eps(), re_cat(re_eps(), re_c('A')))
+print(r.optimize())
+r = re_star(re_cat(re_eps(), re_cat(re_eps(), re_c('A'))))
+print(r.optimize())
