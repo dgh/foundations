@@ -5,6 +5,7 @@ from nfa import NFA
 from dfa import DFA
 from regex import *
 from gnfa import GNFA
+from pprint import pprint
 
 import fa
 
@@ -94,6 +95,9 @@ nfa_fork = NFA('nfa_fork', binary,
 					'E': {Char('0'): ['E'], Char('1'): ['E']}
 				}, {'D'})
 
+print(nfa_fork.forking(String("1")))
+#print(nfa_fork.accepts(String("101")))
+
 trace_tree1 = '(A [(0/A [(1/A [(0/A [(0/A [NO])])])(1/B [(0/C [(0/D [YES])])])])])'
 trace_tree2 = '(A[(1/A[(0/A[(1/A[(0/A[(0/A[NO])])])(1/B[(0/C[(0/D[YES])])])])])(1/B[(0/C[(1/D[(0/E[(0/E[NO])])])])])])'
 trace_tree3 = '(A[(0/A[(0/A[(0/A[(0/A[NO])])])])])'
@@ -108,37 +112,13 @@ trace_tree6 = '(A[(1/A[(0/A[(0/A[(1/A[(0/A[(0/A[NO])])])(1/B[(0/C[(0/D[YES])])])
 # print(f'Example of acceptable string from (0∪1)*◦1◦(0∪1)*: {regex_generate(fa.r5)}')
 # print(f'Example of acceptable string from (0∪1)*◦0◦0◦1◦(0∪1)*: {regex_generate(fa.r6)}')
 
+dfa_test = DFA('test', fa.binary,
+				{'qA', 'qB', 'qC'}, 'qA',
+				{
+					'qA': {Char('0'): 'qB', Char('1'): 'qC'},
+					'qB': {Char('0'): 'qB', Char('1'): 'qC'},
+					'qC': {},
+				}, {'qC'})
 
-# r = re_star(re_null())
-# r.optimize()
-# print(type(r))
-
-# r = re_cat(re_star(re_c('1')), re_null())
-# r.optimize()
-# print(type(r))
-
-# h = re_cat(re_u(re_c('0'), re_eps()), re_star(re_c('1')))
-# hnfa = regex_to_nfa(h, 'hnfa', binary)
-# hdfa = hnfa.to_dfa('hdfa')
-
-dff = DFA('test', fa.binary,
-
-{'qA', 'qB', 'qC'}, 'qA',
-{
-	'qA': {Char('0'): 'qB', Char('1'): 'qC'},
-	'qB': {Char('0'): 'qB', Char('1'): 'qC'},
-	'qC': {},
-}, {'qC'})
-
-from pprint import pprint
-
-# g = GNFA.from_dfa(dff)
-
-r = re_u(re_null(), re_c('A'))
-print(r.optimize())
-r = re_u(re_cat(re_eps(), re_c('A')), re_null())
-print(r.optimize())
-r = re_cat(re_eps(), re_cat(re_eps(), re_c('A')))
-print(r.optimize())
-r = re_star(re_cat(re_eps(), re_cat(re_eps(), re_c('A'))))
-print(r.optimize())
+g = GNFA.from_dfa(dfa_test)
+# pprint(g.δ)

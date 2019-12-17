@@ -41,7 +41,7 @@ class re_eps(regex):
 		return Q, q0, δ, F
 
 	def __repr__(self):
-		return 're_eps<ε>'
+		return 're_eps()'
 
 class re_c(regex):
 	def __init__(self, c):
@@ -55,7 +55,6 @@ class re_c(regex):
 	def nfa(self):
 		Q = set(['0', '1'])
 		q0 = '0'
-		#print(type(self.c))
 		δ = {'0': {self.c: ['1']}, '1': {}}
 		F = set(['1'])
 
@@ -112,7 +111,7 @@ class re_u(regex):
 		return re_u(self.l.optimize(), self.r.optimize())
 
 	def __repr__(self):
-		return f're_u({self.l}∪{self.r})'
+		return f're_u({self.l}, {self.r})'
 
 class re_cat(regex):
 	def __init__(self, lc, rc):
@@ -163,7 +162,7 @@ class re_cat(regex):
 		return re_cat(self.l.optimize(), self.r.optimize())
 
 	def __repr__(self):
-		return f'[({self.l})◦({self.r})]'
+		return f're_cat({self.l}, {self.r})'
 
 class re_star(regex):
 	def __init__(self, r):
@@ -197,4 +196,4 @@ class re_star(regex):
 		return re_star(self.r.optimize())
 
 	def __repr__(self):
-		return f'({self.r})*'
+		return f're_star({self.r})'
